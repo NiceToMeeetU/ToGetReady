@@ -29,7 +29,7 @@ Preparing for the offer and recording all internship, interview, leetcode.
 
     > 总结本地机器学习、深度学习项目工程实现上的经验和体会，实际解决问题的过程等；
 
-  - `BigDataEngineering/md`
+  - `BigDataEngineering.md`
 
     > 总结大数据工程项目，除基本的Hadoop+Spark集群部署外，重点关注实时流计算Flink等，捡干货记录；
 
