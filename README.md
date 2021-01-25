@@ -64,3 +64,9 @@ Preparing for the offer and recording all internship, interview, leetcode.
 ![image-20210122160408510](http://wy-typora-img.oss-cn-chengdu.aliyuncs.com/img/image-20210122160408510.png)
 
 六个月后再见！
+
+
+
+> 01.25
+>
+> 解决了同步push到github和gitee 的问题
