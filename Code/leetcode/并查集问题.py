@@ -34,20 +34,44 @@ class UnionFind:
         self.setCount -= 1
         return True
 
-    def connected(self,x ,y):
+    def connected(self, x, y):
         x, y = self.findset(x), self.findset(y)
         return x == y
-
 
 
 class Solution:
     """
     并查集相关题目合集
     """
-    def minimunEffortPath(self, heights):
+    @staticmethod
+    def minimunEffortPath(heights):
         """
         01.29-每日一题，最小体力消耗路径
         :param heights:
         :return:
         """
-        
+        m, n = len(heights), len(heights[0])
+        edges = list()
+        for i in range(m):
+            for j in range(n):
+                iden = i * n + j
+                if i > 0:
+                    edges.append((iden - n, iden, abs(heights[i][j] - heights[i - 1][j])))
+                if j > 0:
+                    edges.append((iden - 1, iden, abs(heights[i][j] - heights[i][j - 1])))
+        edges.sort(key=lambda e: e[2])
+
+        uf = UnionFind(m * n)
+        ans = 0
+        for x, y, v in edges:
+            uf.unite(x, y)
+            if uf.connected(0, m * n - 1):
+                ans = v
+                break
+        return ans
+
+
+if __name__ == '__main__':
+    pass
+    solution = Solution()
+    solution.minimunEffortPath()
