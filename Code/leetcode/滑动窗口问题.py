@@ -6,12 +6,18 @@
 # @Software: PyCharm
 
 
+import bisect
 
 
 
 class Solution:
-    import bisect
-    def medianSlidingWindow(self, nums: List[int], k: int) -> List[float]:
+    def medianSlidingWindow(self, nums: list[int], k: int) -> list[float]:
+        """
+        滑动中位数问题
+        :param nums: 整数数组
+        :param k: 窗口大小
+        :return: 每个窗口内的中位数
+        """
         median = lambda a: (a[(len(a) - 1) // 2] + a[len(a) // 2]) / 2
         a = sorted(nums[:k])
         res = [median(a)]
