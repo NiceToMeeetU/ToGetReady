@@ -10,7 +10,7 @@
 双指针通常用于求子串等，本质是滑动窗口
 只是很多问题不会直接把题意写明白，需要绕个弯找到本质，转换为双指针问题
 """
-
+from typing import List
 
 def dualpointmodel(nums,maxs):
     """
@@ -34,3 +34,26 @@ def dualpointmodel(nums,maxs):
         j += 1      # 右指针在外主动移动
     return res
 
+def minSubArrayLen( s: int, nums: List[int]) -> int:
+    """
+    不要过于死扣模板
+    本题是求满足和>=目标值的最小长度子串，所以内层循环正好跟模板相反，是满足条件后移动左指针
+    :param s:
+    :param nums:
+    :return:
+    """
+    if not nums:
+        return 0
+
+    n = len(nums)
+    i, j = 0, 0
+    sums = 0
+    res = n + 1
+    while j < n:
+        sums += nums[j]
+        while sums >= s:
+            res = min(res, j - i + 1)
+            sums -= nums[i]
+            i += 1
+        j += 1
+    return 0 if res == n + 1 else res
