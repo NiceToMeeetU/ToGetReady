@@ -19,6 +19,5 @@ def cal_time(func):
         t2 = time.time()
         print(f"Func {func.__name__} running time: {t2 -t1:0.4f} s")
         return res
-
-    return wrapper()
+    return wrapper
 
