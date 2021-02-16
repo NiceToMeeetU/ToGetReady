@@ -70,5 +70,7 @@ Lambda架构，批处理流处理两套类似的逻辑。
 
 - https://mp.weixin.qq.com/s/9Pe4N7Sfbe2-xsomg4b6ww
 
+### 有哪些ETL的典型工具？
 
+**ETL工具的典型代表有:Informatica、Datastage、OWB、微软DTS等。**
 
