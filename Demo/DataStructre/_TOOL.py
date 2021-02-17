@@ -17,7 +17,7 @@ def cal_time(func):
         t1 = time.time()
         res = func(*args, **kwargs)
         t2 = time.time()
-        print(f"Func {func.__name__} running time: {t2 -t1:0.4f} s")
+        print(f"###     Func {func.__name__} running time: {t2 -t1:0.4f} s")
         return res
     return wrapper
 
