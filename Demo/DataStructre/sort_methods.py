@@ -17,8 +17,8 @@ class SortMethods:
     为利于不同方法对比，每种方法先设置对待排序数组的深拷贝
     """
 
-    def __init__(self, int_list):
-        self.int_list = int_list
+    def __init__(self, nums_in):
+        self.nums_in = nums_in
 
     @cal_time
     def bubble_sort(self):
@@ -30,7 +30,7 @@ class SortMethods:
         存在问题：
             若数组本身有序，会浪费时间
         """
-        nums = copy.deepcopy(self.int_list)
+        nums = copy.deepcopy(self.nums_in)
         for i in range(len(nums)):
             for j in range(len(nums) - i - 1):
                 if nums[j] > nums[j + 1]:
@@ -43,7 +43,7 @@ class SortMethods:
         冒泡排序可以优化的点：
         如果一趟中完全没有发生交换，说明数组已经有序，可直接break
         """
-        nums = copy.deepcopy(self.int_list)
+        nums = copy.deepcopy(self.nums_in)
         exchange = False
         for i in range(len(nums)):
             for j in range(len(nums) - i - 1):
@@ -61,7 +61,7 @@ class SortMethods:
         一趟中最小的数放首位，多趟循环
         注意有序区和无序区
         """
-        nums = copy.deepcopy(self.int_list)
+        nums = copy.deepcopy(self.nums_in)
         for i in range(len(nums)):
             min_loc = i
             for j in range(i + 1, len(nums)):
@@ -77,7 +77,7 @@ class SortMethods:
         插入排序
         每次迭代从无序区挑一个数放入有序区的合适位置
         """
-        nums = copy.deepcopy(self.int_list)
+        nums = copy.deepcopy(self.nums_in)
         for i in range(1, len(nums)):
             tmp = nums[i]
             j = i - 1
@@ -92,7 +92,7 @@ class SortMethods:
         """
         快速排序
         """
-        nums = copy.deepcopy(self.int_list)
+        nums = copy.deepcopy(self.nums_in)
 
         def partition(li, left, right):
             tmp = li[left]
@@ -121,6 +121,42 @@ class SortMethods:
 
         _quick_sort(nums, 0, len(nums) - 1)
         return nums
+
+    @cal_time
+    def heap_sort(self):
+        """
+        堆排序
+
+        :return:
+        """
+        pass
+
+
+    @cal_time
+    def heap_sort_inside(self):
+        """
+        python内置了heapq模块，可以快速建堆
+        用堆实现的优先队列
+        :return:
+        """
+        pass
+        import heapq
+
+class TopK:
+    """
+    TopK 问题
+    """
+    def __init__(self, nums_in):
+        self.nums_in = nums_in
+
+    def heap_top_k(self, k):
+        """
+        堆排序解决TopK问题
+        :param k:
+        :return:
+        """
+        pass
+
 
 
 def test01():
