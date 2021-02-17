@@ -21,6 +21,14 @@ class SortMethods:
         self.nums_in = nums_in
 
     @cal_time
+    def inside_sort(self):
+        """
+        python内置排序API
+        """
+        nums = copy.deepcopy(self.nums_in)
+        return sorted(nums)
+
+    @cal_time
     def bubble_sort(self):
         """
         冒泡排序
@@ -92,16 +100,17 @@ class SortMethods:
         """
         快速排序
         分治策略
+        从左到右，从小到大
         """
         nums = copy.deepcopy(self.nums_in)
 
         def partition(li, left, right):
             tmp = li[left]
             while left < right:
-                while left < right and li[right] >= tmp:
+                while left < right and li[right] >= tmp:  # 右侧的小元素放到左侧
                     right -= 1
                 li[left] = li[right]
-                while left < right and li[left] <= tmp:
+                while left < right and li[left] <= tmp:  # 左侧的大元素放到右侧
                     left += 1
                 li[right] = li[left]
             li[left] = tmp
@@ -127,15 +136,15 @@ class SortMethods:
     def heap_sort(self):
         """
         堆排序
-
-        :return:
+        从小到大排序构建大根堆
+        从大到小排序构建小根堆
         """
         nums = copy.deepcopy(self.nums_in)
         n = len(nums)
 
-        def sift(data, low, high):
+        def _siftdown(data, low, high):
             """
-            堆的调整函数，
+            向下调整函数，
             :param data: 整数数组
             :param low: 堆根节点
             :param high: 堆最后一个叶节点
@@ -147,7 +156,6 @@ class SortMethods:
             while j <= high:  # 构建一个大根堆
                 if j < high and data[j] < data[j + 1]:  # 单独的if切换必要的左右子节点
                     j += 1
-
                 if tmp < data[j]:  # 只要子节点比父节点大，就交换
                     data[i] = data[j]
                     i = j
@@ -159,14 +167,14 @@ class SortMethods:
 
         # 开始排序，1-建堆，2-取数
 
-        for i in range(n // 2 - 1, -1, -1):  # (n-1)是最后一个子节点，(n-1-1)//2即最后一个有效父节点
+        for idx in range(n // 2 - 1, -1, -1):  # (n-1)是最后一个子节点，(n-1-1)//2即最后一个有效父节点
             # 从最后一个有效父节点开始往上遍历，依次调整
-            sift(nums, i, n - 1)
+            _siftdown(nums, idx, n - 1)
 
-        for i in range(n - 1, -1, -1):
+        for idx in range(n - 1, -1, -1):
             # 取数，将大根堆的根节点依次挪到数组最后，不断缩短堆的顶
-            nums[0], nums[i] = nums[i], nums[0]
-            sift(nums, 0, i - 1)
+            nums[0], nums[idx] = nums[idx], nums[0]
+            _siftdown(nums, 0, idx - 1)
         return nums
 
     @cal_time
@@ -178,6 +186,10 @@ class SortMethods:
         """
         pass
         import heapq
+        nums = copy.deepcopy(self.nums_in)
+        heapq.heapify(nums)
+        res = [heapq.heappop(nums) for _ in range(len(nums))]
+        return res
 
 
 class TopK:
@@ -192,26 +204,72 @@ class TopK:
     6、随机法
     """
 
-    def __init__(self, nums_in):
+    def __init__(self, nums_in, k):
         self.nums_in = nums_in
+        self.k = k
 
-    def heap_top_k(self, k):
+    def qsort_top_k(self):
         """
-        堆排序解决TopK问题
-        先选k个选择构建一个小根堆，然后遍历原数组更新小根堆，遍历完成即得
-        :param k:
+        全局快排后取切片
         :return:
         """
         pass
 
+    @cal_time
+    def heap_top_k(self):
+        """
+        堆排序解决TopK问题
+        先选k个选择构建一个小根堆，然后遍历原数组更新小根堆，遍历完成即得
+        """
+        pass
+        nums = copy.deepcopy(self.nums_in)
+        n = len(nums)
+
+        def _upsift(data, low, high):
+            i = low
+            j = 2 * i + 1
+            tmp = data[i]
+            while j <= high:
+                if j < high and data[j] > data[j + 1]:
+                    j += 1
+
+                if tmp > data[j]:
+                    data[i] = data[j]
+                    i = j
+                    j = i * 2 + 1
+                else:
+                    break
+            data[i] = tmp
+
+        heap_nums = nums[:self.k]
+
+        # 构建k个元素的大根堆
+        for idx in range(self.k // 2 - 1, -1, -1):
+            _upsift(heap_nums, idx, self.k - 1)
+        # 此时栈顶已经是这k个元素的最大值了
+        # 遍历剩余n-k的原数组，只要比堆顶大就加入，否则略过
+        for idx in range(self.k, n):
+            if nums[idx] > heap_nums[0]:
+                heap_nums[0] = nums[idx]
+                _upsift(heap_nums, 0, self.k - 1)
+
+        # 按照从大到小输出结果
+        for idx in range(self.k - 1, -1, -1):
+            heap_nums[0], heap_nums[idx] = heap_nums[idx], heap_nums[0]
+            _upsift(heap_nums, 0, idx - 1)
+
+        return heap_nums
+
 
 def test01():
-    li1 = list(range(1, 100))
+    li1 = list(range(1, 1000000))
     random.shuffle(li1)
-    print(li1)
+    # print(li1)
     sorts = SortMethods(li1)
-    ans = sorts.heap_sort()
+    topk = TopK(li1, 10)
+    ans = topk.heap_top_k()
     print(ans)
+    # print(ans)
 
 
 if __name__ == '__main__':
