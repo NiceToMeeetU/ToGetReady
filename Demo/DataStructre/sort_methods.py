@@ -95,6 +95,9 @@ class SortMethods:
             nums[j + 1] = tmp
         return nums
 
+
+
+
     @cal_time
     def quick_sort(self):
         """
@@ -191,6 +194,65 @@ class SortMethods:
         res = [heapq.heappop(nums) for _ in range(len(nums))]
         return res
 
+    @cal_time
+    def merge_sort(self):
+        """
+        归并排序
+        先考虑有序的两个数组如何归并
+        :return:
+        """
+        nums = copy.deepcopy(self.nums_in)
+        n = len(nums)
+        def _merge(data, left, mid, right):
+            i = left
+            j = mid + 1
+            tmp = []
+            while i <= mid and j <= right:
+                if data[i] < data[j]:
+                    tmp.append(data[i])
+                    i += 1
+                else:
+                    tmp.append(data[j])
+                    j += 1
+            while i <= mid:
+                tmp.append(data[i])
+                i += 1
+            while j <= right:
+                tmp.append(data[j])
+                j += 1
+
+            data[left: right+1] = tmp
+
+        def _merge_sort(data, left, right):
+            if left < right:
+                mid = (left + right) // 2
+                _merge_sort(data, left, mid)
+                _merge_sort(data, mid + 1, right)
+                _merge(data, left, mid, right)
+
+        _merge_sort(nums, 0, n - 1)
+        return nums
+
+    @cal_time
+    def shell_sort(self):
+        """
+        简单选择gap的希尔排序示意
+        :return:
+        """
+        nums = copy.deepcopy(self.nums_in)
+        d = len(nums) // 2
+        while d >= 1:
+            for i in range(d, len(nums)):
+                tmp = nums[i]
+                j = i - d
+                while j >= 0 and tmp < nums[j]:
+                    nums[j + d] = nums[j]
+                    j -= d
+                nums[j + d] = tmp
+
+            d //= 2
+        return nums
+
 
 class TopK:
     """
@@ -266,11 +328,12 @@ def test01():
     random.shuffle(li1)
     # print(li1)
     sorts = SortMethods(li1)
-    topk = TopK(li1, 10)
-    ans = topk.heap_top_k()
-    print(ans)
-    # print(ans)
-
+    ans0 = sorts.inside_sort()
+    ans1 = sorts.quick_sort()
+    ans2 = sorts.heap_sort()
+    ans3 = sorts.merge_sort()
+    ans4 = sorts.shell_sort()
+    # print(ans4)
 
 if __name__ == '__main__':
     test01()

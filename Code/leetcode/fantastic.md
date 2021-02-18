@@ -63,3 +63,11 @@ class Solution:
 ![image-20210218131819713](http://wy-typora-img.oss-cn-chengdu.aliyuncs.com/img/image-20210218131819713.png)
 
 ![image-20210218131836118](http://wy-typora-img.oss-cn-chengdu.aliyuncs.com/img/image-20210218131836118.png)
+
+
+
+
+
+按着换的排序方法都是稳定的
+
+否则都是不稳定排序
