@@ -48,3 +48,18 @@ class Solution:
 
 
 用栈实现队列，不要简单地用两个list做栈来回倒腾，pop和peek的时间复杂度过高，可以直接设置一个front变量存储入栈的栈底元素，作为队列的first元素用于弹出。s_in为空时同时将front置空即可，两个栈互不牵连。
+
+
+
+优先队列的实现机制：
+
+- heap堆
+- 二叉搜索树
+
+
+
+
+
+![image-20210218131819713](http://wy-typora-img.oss-cn-chengdu.aliyuncs.com/img/image-20210218131819713.png)
+
+![image-20210218131836118](http://wy-typora-img.oss-cn-chengdu.aliyuncs.com/img/image-20210218131836118.png)

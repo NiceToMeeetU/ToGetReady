@@ -7,7 +7,7 @@
 
 
 import bisect
-
+from typing import List
 
 
 class Solution:
@@ -26,3 +26,29 @@ class Solution:
             a.insert(bisect.bisect_left(a, j), j)
             res.append(median(a))
         return res
+
+def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
+    """
+    239题，用双端队列实现固定长度滑动窗口的最大值。
+    :param nums:
+    :param k:
+    :return:
+    """
+    if not nums: return []
+    window, res = [], []
+    for i, x in enumerate(nums):
+        if i >= k and window[0] <= i - k:
+            window.pop(0)
+
+        while window and nums[window[-1]] <= x:
+            window.pop()
+
+        window.append(i)
+
+        if i >= k - 1:
+            res.append(nums[window[0]])
+    return res
+
+
+a = [2,3,1,5,7,-1,234,5,3,2,5,6,8,6]
+ans = maxSlidingWindow(a, 3)
