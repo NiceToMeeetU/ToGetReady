@@ -58,4 +58,10 @@ def maximumScore(nums: List[int], multipliers: List[int]) -> int:
     return res
 
 
-ans = maximumScore([-5,-3,-3,-2,7,1], [-10,-5,3,4,6])
+def isToeplitzMatrix(matrix: List[List[int]]) -> bool:
+    m = max(len(matrix), len(matrix[0]))
+    n = min(len(matrix), len(matrix[0]))
+    for i in range(1, len(matrix)):
+        if matrix[i][1:] != matrix[i-1][:-1]:
+            return False
+    return True

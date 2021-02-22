@@ -255,6 +255,47 @@ class SortMethods:
         return nums
 
 
+    @cal_time
+    def count_sort(self, max_count = 100):
+        """
+        计数排序
+        即字面意思，构建一个O(n)的map映射，统计各个元素的出现次数
+        必须提前知道数的大小范围，且限制数据类型，空间浪费太多
+        :return:
+        """
+        nums = copy.deepcopy(self.nums_in)
+        counts = [0 for _ in range(max_count)]
+        for val in nums:
+            counts[val] += 1
+        nums.clear()
+        for idx, x in enumerate(counts):
+            for i in range(x):
+                nums.append(idx)
+        return nums
+
+    @cal_time
+    def bucket_sort(self, n = 100, max_num = 10000):
+        """
+        桶排序
+        严重取决于数据分布
+        :return:
+        """
+        nums = copy.deepcopy(self.nums_in)
+        buckets = [[] for _ in range(n)]
+        for val in nums:
+            i = min(val // (max_num//n), n - 1)
+            buckets[i].append(val)
+            for j in range(len(buckets[i]) - 1, 0, -1):
+                if buckets[i][j] < buckets[i][j - 1]: # 直接在桶内排序
+                    buckets[i][j], buckets[i][j-1] = buckets[i][j-1], buckets[i][j]
+                else:
+                    break
+        res = []
+        for bin in buckets:
+            res.extend(bin)
+        return res
+
+
 class TopK:
     """
     TopK 问题
@@ -325,15 +366,17 @@ class TopK:
 
 
 def test01():
-    li1 = list(range(1, 1000000))
+    li1 = list(range(1, 10000))
     random.shuffle(li1)
     # print(li1)
     sorts = SortMethods(li1)
     ans0 = sorts.inside_sort()
-    ans1 = sorts.quick_sort()
-    ans2 = sorts.heap_sort()
-    ans3 = sorts.merge_sort()
-    ans4 = sorts.shell_sort()
+    # ans1 = sorts.quick_sort()
+    # ans2 = sorts.heap_sort()
+    # ans3 = sorts.merge_sort()
+    # ans4 = sorts.shell_sort()
+    ans5 = sorts.bucket_sort(100, 10000)
+    print(ans5[:20])
     # print(ans4)
 
 if __name__ == '__main__':
