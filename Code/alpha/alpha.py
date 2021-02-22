@@ -5,7 +5,7 @@
 # @File    : alpha.py
 # @Software: PyCharm
 
-
+from typing import List
 
 class UnionFind:
 
@@ -41,3 +41,21 @@ class solution:
         m,n = len(facmat), len(facmat[0])
 
 
+def maximumScore(nums: List[int], multipliers: List[int]) -> int:
+    n = len(nums)
+    m = len(multipliers)
+    res = 0
+    left, right = 0, n - 1
+    for i in range(m):
+        if multipliers[i] * nums[left] > multipliers[i] * nums[right]:
+            print(nums[left], multipliers[i])
+            res += multipliers[i] * nums[left]
+            left += 1
+        else:
+            print(nums[right], multipliers[i])
+            res += multipliers[i] * nums[right]
+            right -= 1
+    return res
+
+
+ans = maximumScore([-5,-3,-3,-2,7,1], [-10,-5,3,4,6])

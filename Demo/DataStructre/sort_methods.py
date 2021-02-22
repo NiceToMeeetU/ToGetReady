@@ -237,6 +237,7 @@ class SortMethods:
     def shell_sort(self):
         """
         简单选择gap的希尔排序示意
+        实际就是将插入排序加入了gap因素
         :return:
         """
         nums = copy.deepcopy(self.nums_in)
