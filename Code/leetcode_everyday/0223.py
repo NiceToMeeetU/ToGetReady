@@ -107,8 +107,8 @@ class Solution:
 
 if __name__ == '__main__':
     pass
-    s = Solution()
+    solution = Solution()
     # s.m1052()
     # s.e1()
     # s.e1528()
-    s.e1502()
+    solution.e1502()

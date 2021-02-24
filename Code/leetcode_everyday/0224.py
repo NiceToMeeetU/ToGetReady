@@ -18,9 +18,13 @@ class Solution:
         """
 
 
-    def m56(self):
-        print(self.merge([[1,3],[2,6],[8,10],[15,18]], [[1,6],[8,10],[15,18]]))
+    def test(self):
+        test = """
+        
+        """
 
+        print(self.merge())
 
 if __name__ == '__main__':
     s = Solution()
+    s.test()
