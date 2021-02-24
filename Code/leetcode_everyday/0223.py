@@ -86,16 +86,24 @@ class Solution:
         print(self.restoreString("codeleet", [4,5,6,7,0,2,1,3]))
 
     def canMakeArithmeticProgression(self, arr: List[int]) -> bool:
-        dict_ = dict()
-        d = abs(max(arr) - min(arr))//(len(arr) - 1)
-        for i in arr:
-            dict_[i] = dict_.get(i, 0) + 1
-            dict_[i + d] = dict_.get(i + d, 0) + 1
-            dict_[i - d] = dict_.get(i - d, 0) + 1
-        print(dict_)
+        """
+        专门写一个O(n)的无聊解法
+        :param arr:
+        :return:
+        """
+        _min = min(arr)
+        _max = max(arr)
+        n = len(arr)
+        d = (_max - _min)//(n - 1)
+        _arr = [_min + d * i for i in range(n)]
+        for num in arr:
+            if num not in _arr:
+                return False
+            _arr.remove(num)
+        return True
 
     def e1502(self):
-        self.canMakeArithmeticProgression([3,5,4])
+        print(self.canMakeArithmeticProgression([1,2,3,2,5]))
 
 if __name__ == '__main__':
     pass
