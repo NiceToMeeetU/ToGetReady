@@ -38,7 +38,69 @@ class Solution:
         ans = self.maxSatisfied(customers,grumpy,X)
         print(ans)
 
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        dict_ = dict()
+        for idx, num in enumerate(nums):
+            if target - num in dict_:
+                return [dict_[target - num], idx]
+            dict_[num] = idx
+        return []
+
+    def e1(self):
+        ans = self.twoSum([1,2,3,4,5], 4)
+        print(ans)
+
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        # for line in matrix:
+        #     if target in line:
+        #         return True
+        # return False
+        if not matrix or not matrix[0]:
+            return False
+        m, n = len(matrix), len(matrix[0])
+        left = 0
+        right = m * n - 1
+        while left < right:
+            mid = (left + right) // 2
+            i = mid // n
+            j = mid % n
+            if matrix[i][j] == target:
+                return True
+            elif matrix[i][j]  < target:
+                left = mid + 1
+            elif matrix[i][j]  > target:
+                right = mid - 1
+        return False
+
+
+    def m74(self):
+        self.searchMatrix()
+
+    def restoreString(self, s: str, indices: List[int]) -> str:
+        res = ["a"] * len(s)
+        for i in range(len(s)):
+            res[indices[i]] = s[i]
+        return ''.join(res)
+
+    def e1528(self):
+        print(self.restoreString("codeleet", [4,5,6,7,0,2,1,3]))
+
+    def canMakeArithmeticProgression(self, arr: List[int]) -> bool:
+        dict_ = dict()
+        d = abs(max(arr) - min(arr))//(len(arr) - 1)
+        for i in arr:
+            dict_[i] = dict_.get(i, 0) + 1
+            dict_[i + d] = dict_.get(i + d, 0) + 1
+            dict_[i - d] = dict_.get(i - d, 0) + 1
+        print(dict_)
+
+    def e1502(self):
+        self.canMakeArithmeticProgression([3,5,4])
+
 if __name__ == '__main__':
     pass
     s = Solution()
-    s.m1052()
+    # s.m1052()
+    # s.e1()
+    # s.e1528()
+    s.e1502()
