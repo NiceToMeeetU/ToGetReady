@@ -67,7 +67,7 @@ class Solution:
         visited = set()
         while stack:
             x, y = stack.pop()
-            if [x,y] == destination:
+            if [x, y] == destination:
                 return True
             visited.add((x, y))
             for d1, d2 in dirs:
@@ -82,13 +82,79 @@ class Solution:
                     stack.append((tmp_x, tmp_y))
         return False
 
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        """
+        剑指 Offer 59
+        给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+        队列
+        :param nums:
+        :param k:
+        :return:
+        """
+        res = []
+        queue = []
+        if not nums or k == 0:
+            return res
+        for idx, num in enumerate(nums):
+            if idx >= k and queue[0] <= idx - k:
+                queue.pop(0)
+            while queue and nums[queue[-1]] <= num:
+                queue.pop()
+            queue.append(idx)
+            if idx >= k - 1:
+                res.append(nums[queue[0]])
+        return res
 
+    def maxSlidingWindow2(self, nums: List[int], k: int) -> List[int]:
+        """
+        239 换方法 大根堆
+        给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+        队列
+        :param nums:
+        :param k:
+        :return:
+        """
+        if not nums or k == 0:
+            return []
+        q = [(-nums[i], i) for i in range(k)]
+        import heapq
+        heapq.heapify(q)
+        res = [-q[0][0]]
+        for i in range(k, len(nums)):
+            heapq.heappush(q, (-nums[i], i))
+            while q[0][1] <= i - k:
+                heapq.heappop(q)
+            res.append(-q[0][0])
+        return res
 
+    def maxSlidingWindow3(self, nums: List[int], k: int) -> List[int]:
+        """
+        239 换方法 优先队列
+        给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+        :param nums:
+        :param k:
+        :return:
+        """
+        from collections import deque
+        q = deque()
+        n = len(nums)
+        for i in range(k):
+            while q and nums[i] >= nums[q[-1]]:
+                q.pop()
+            q.append(i)
+        res = [nums[q[0]]]
+        for i in range(k, n):
+            while q and nums[i] >= nums[q[-1]]:
+                q.pop()
+            q.append(i)
+            while q[0] < i - k:
+                q.pop(0)    # 等价 q.popleft()
+            res.append(nums[q[0]])
+        return res
 
-
-
+    
     def test(self):
-        ans = self.hasPath([[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]], [0, 4], [4,4])
+        ans = self.hasPath([[0, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0], [1, 1, 0, 1, 1], [0, 0, 0, 0, 0]], [0, 4], [4, 4])
         # ans = self.hasPath([[0, 0, 1, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0], [1, 1, 0, 1, 1], [0, 0, 0, 0, 0]], [0, 4], [3, 2])
         # ans = self.transpose([[1,2,3],[4,5,6],[7,8,9]])
         print(ans)
