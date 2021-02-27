@@ -84,6 +84,12 @@ class Solution:
         :return:6
 
         """
+        res = nums[0]
+        tmp_ = 0
+        for num in nums:
+            tmp_ = max(num, num + tmp_)
+            res = max(res, tmp_)
+        return res
 
 
     def test(self):
