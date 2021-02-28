@@ -32,6 +32,16 @@ class Solution:
                 res += 1
         return res
 
+    def countMatches1(self, items: List[List[str]], ruleKey: str, ruleValue: str) -> int:
+        """
+        高手写法，三个if可以直接将最后一个去掉，判断语句放到循环的外面，减少一半的运行时间
+        """
+        if ruleKey == "type":
+            return sum(item[0] == ruleValue for item in items)
+        elif ruleKey == "color":
+            return sum(item[1] == ruleValue for item in items)
+        return sum(item[2] == ruleValue for item in items)
+
     def closestCost(self, baseCosts: List[int], toppingCosts: List[int], target: int) -> int:
         """
         你打算做甜点，现在需要购买配料。目前共有 n 种冰激凌基料和 m 种配料可供选购。
@@ -54,6 +64,7 @@ class Solution:
         baseCosts最多10种，是否可以考虑全部遍历一遍？
         toppingCosts最多两份，那么直接将该数组扩充一倍后在内抽选组合即可。
 
+        折腾了好久最后还是没有提交成功
         """
         n, m = len(baseCosts), len(toppingCosts)
         # toppingCosts = toppingCosts + toppingCosts  # 扩充配料表
@@ -103,54 +114,42 @@ class Solution:
                 # print(f"{ans=}")
                 print(f"{res=}")
         return res
-
-    def closestCost2(self, baseCosts: List[int], toppingCosts: List[int], target: int) -> int:
-        """
-        你打算做甜点，现在需要购买配料。目前共有 n 种冰激凌基料和 m 种配料可供选购。
-        而制作甜点需要遵循以下几条规则：
-            必须选择 一种 冰激凌基料。
-            可以添加 一种或多种 配料，也可以不添加任何配料。
-            每种类型的配料 最多两份 。
-        给你以下三个输入：
-        baseCosts ，一个长度为 n 的整数数组，其中每个 baseCosts[i] 表示第 i 种冰激凌基料的价格。
-        toppingCosts，一个长度为 m 的整数数组，其中每个 toppingCosts[i] 表示 一份 第 i 种冰激凌配料的价格。
-        target ，一个整数，表示你制作甜点的目标价格。
-        你希望自己做的甜点总成本尽可能接近目标价格 target 。
-        返回最接近 target 的甜点成本。如果有多种方案，返回 成本相对较低 的一种。
-        :param baseCosts:
-        :param toppingCosts:
-        :param target:
-        :return:
-        最后的目标函数是从两个方向逼近target
-        在距离相同的情况下才考虑选择更低价格的方案
-        baseCosts最多10种，是否可以考虑全部遍历一遍？
-        toppingCosts最多两份，那么直接将该数组扩充一倍后在内抽选组合即可。
-
-        """
-        n, m = len(baseCosts), len(toppingCosts)
-        toppingCosts.sort()
-        # toppingCosts = toppingCosts + toppingCosts  # 扩充配料表
-        toppingCosts = [toppingCosts[idx // 2] for idx in range(2 * len(toppingCosts))]
-
-        def flat(array, pos, flat_array):
-            if pos > len(array) - 1:
-                return flat_array
-            temp = flat_array + [ele + array[pos] for ele in flat_array]
-            return flat(array, pos + 1, temp)
-
-        left = flat(toppingCosts[:m], 0, [0])
-        right = flat(toppingCosts[m:], 0, [0])
-        print(f"{left=}")
-        print(f"{right=}")
-        res = float('inf')
-        ans = float('inf')
+    def closetCost1(self, baseCosts: List[int], toppingCosts: List[int], target: int) -> int:
+        """大神解法"""
+        def dfs(start, i):
+            nonlocal cost
+            if (abs(start - target) < abs(cost < target)) or (start < cost and abs(start - target) == abs(cost - target)):
+                cost = start
+            if i >= len(toppingCosts):
+                return
+            for k in range(3):
+                dfs(start + k * toppingCosts[i], i + 1)
+        cost = float("inf")
         for base in baseCosts:
-            i, j =0, 0
-            for j in range(m):
+            dfs(base, 0)
+        return cost
 
-        return res
+    def closetCost2(self, baseCosts: List[int], toppingCosts: List[int], target: int) -> int:
+        """
+        居然还可以直接暴力穷举
+        """
+        import itertools
+        n, m = len(baseCosts), len(toppingCosts)
+        ans = baseCosts[0]
+
+        # 神之一笔，因为m，n有限，直接构造完整的可选组合穷举
+        # itertools.product()
+        for choice in itertools.product(range(3), repeat=m):
 
 
+            topping = sum(c1 * c2 for c1, c2 in zip(toppingCosts, choice))
+            for b in baseCosts:
+                cost = topping + b
+                # 直接在ans的赋值判断语句中定义好条件，总的abs差异要小且选择更低的值
+                # 一步到位，不用选择嵌套循环，用or比两个if来的实在的多。
+                if abs(cost - target) < abs(ans - target) or (abs(cost-target) == abs(ans - target) and cost < ans):
+                    ans = cost
+        return ans
 
     def minOperations(self, nums1: List[int], nums2: List[int]) -> int:
         """
@@ -162,10 +161,10 @@ class Solution:
         :return:
         """
 
-
     def test(self):
-        ans = self.closestCost([2,3], [4,5,100], 18)
+        ans = self.closestCost([2, 3], [4, 5, 100], 18)
         print(ans)
+
 
 if __name__ == '__main__':
     solution = Solution()
