@@ -22,21 +22,23 @@ class Stack:
         else:
             return None
 
+
 class Queue:
     """
     环形队列
     - 创建时应该指定长度
     - 指针的移动不要直接加1，应该加一后模长度，可实现环形指针移动
     """
-    def __init__(self, size = 100):
+
+    def __init__(self, size=100):
         self.queue = [0] * size
         self.size = size
-        self.rear = 0   # 队尾指针
+        self.rear = 0  # 队尾指针
         self.front = 0  # 队首指针
 
     def push(self, element):
         if not self.is_filled():
-            self.rear = (self.rear + 1 ) % self.size
+            self.rear = (self.rear + 1) % self.size
             self.queue[self.rear] = element
         else:
             raise IndexError("Queue is filled.")
@@ -47,12 +49,37 @@ class Queue:
             return self.queue[self.front]
         else:
             raise IndexError("Queue is empty.")
+
     def is_empty(self):
         return self.rear == self.front
 
     def is_filled(self):
         return (self.rear + 1) % self.size == self.front
 
+
 # 造个轮子试一下即可，实际多使用官方模块
 from collections import deque
+
 q = deque()
+
+
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+def create_linklist_head(li):
+    """
+    头插法创建链表
+    :param li:
+    :return:
+    """
+    res = Node(li[0])
+
+
+def create_linklist_tail(li):
+    """
+    尾插法创建链表
+    :param li:
+    :return:
+    """
