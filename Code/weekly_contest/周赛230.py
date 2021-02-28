@@ -2,7 +2,7 @@
 # @Time    : 21/02/28 10:30
 # @Author  : Wang Yu
 # @Project : ToGetReady
-# @File    : a.py
+# @File    : 周赛230.py
 # @Software: PyCharm
 from typing import List
 
