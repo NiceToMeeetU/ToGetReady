@@ -150,6 +150,26 @@ class Solution:
                 if abs(cost - target) < abs(ans - target) or (abs(cost-target) == abs(ans - target) and cost < ans):
                     ans = cost
         return ans
+    def closetCost3(self, baseCosts: List[int], toppingCosts: List[int], target: int) -> int:
+        """
+        枚举出所有子集的和后二分查找
+        """
+        import bisect
+        toppingSum = {0, }
+        for t in toppingCosts * 2:
+            toppingSum |= set([s + t for s in toppingSum])
+        toppingSum = sorted(toppingSum)
+        l = len(toppingSum)
+
+        # 二分
+        ans = 1000000007
+        for c in baseCosts:
+            i = bisect.bisect_right(toppingSum, target - c)
+            if i > 0 and abs(c + toppingSum[i - 1] - target) < abs(ans - target):
+                ans = c + toppingSum[i - 1]
+            if i < 1 and abs(c + toppingSum[i] - target) < abs(ans - target):
+                ans = c + toppingSum[i]
+        return ans
 
     def minOperations(self, nums1: List[int], nums2: List[int]) -> int:
         """
@@ -159,10 +179,55 @@ class Solution:
         :param nums1:
         :param nums2:
         :return:
+        两个数组的和是一定的，其差值也是一定的，想让其和相等无非是让小的数组更大一点，大的数组更小一点
+        小数组能增大的量即sum(6 - i for i in nums1)
+        大数组能减小的量即sum(i - 1 for i in nums2)
+        即最大增量、最大减量是一定的
+        如果所有的裕量全部用完都无法相等则肯定没有办法了
+        如果裕量足够，只需在其中选取最少的次数即可
         """
+        from collections import Counter
+        s1 = sum(nums1)
+        s2 = sum(nums2)
+        if s1 == s2:
+            return 0
+        elif s1 > s2:
+            return self.minOperations(nums2, nums1)
+
+        diff = s2 - s1
+        freq = Counter(6 - i for i in nums1) + Counter(i - 1 for i in nums2)
+        ans = 0
+        for i in range(5, 0, -1):
+            if diff <= 0:
+                break
+            for _ in range(freq[i]):
+                if diff <= 0:
+                    break
+                ans += 1
+                freq[i] -= 1
+                diff -= i
+        return -1 if diff > 0 else ans
+
+    def minOperations2(self, nums1: List[int], nums2: List[int]) -> int:
+        """
+        统计各位上可以贡献的差值，从大到小遍历
+        """
+        diff = sum(nums2) - sum(nums1)
+        cost = [0] * 6
+        # 不失一般性，假定num1 < nums2
+        for num in nums1:
+            cost[6 - (num - 1)] += 1
+        for num in nums2:
+            cost[num - 1] += 1
+
+
+
+
+
 
     def test(self):
-        ans = self.closestCost([2, 3], [4, 5, 100], 18)
+        # ans = self.closestCost([2, 3], [4, 5, 100], 18)
+        ans = self.minOperations([1,1,1,1,1,1,1],[6])
         print(ans)
 
 
