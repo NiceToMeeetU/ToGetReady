@@ -28,10 +28,11 @@ class Solution:
         python中的int是32位的，直接用来表示绰绰有余
         需要先搞明白二进制下的子集如何求
         """
+
         def subsets(li):
             ans = [""]
             for i in li:
-                ans  = ans + [i + j for j in ans]
+                ans = ans + [i + j for j in ans]
             return ans
 
         from collections import Counter
@@ -39,7 +40,7 @@ class Solution:
         for word in words:
             mask = 0
             for letter in word:
-                mask |= 1 << (ord(letter) - ord("a"))       # 使用移位计算快速完成字符哈希压缩
+                mask |= 1 << (ord(letter) - ord("a"))  # 使用移位计算快速完成字符哈希压缩
             freq[mask] += 1
         res = []
         for puzzle in puzzles:
@@ -51,10 +52,6 @@ class Solution:
                 total += freq[mask]
             res.append(total)
         return res
-
-
-
-
 
     def subsets(self, nums: List[int]) -> List[List[int]]:
         """
@@ -70,13 +67,12 @@ class Solution:
             res = res + [[num] + i for i in res]
         return res
 
-
-
     def test(self):
         ans = self.findNumOfValidWords(["aaaa", "asas", "able", "ability", "actt", "actor", "access"],
                                        ["aboveyz", "abrodyz", "abslute", "absoryz", "actresz", "gaswxyz"])
         # ans = self.subsets([1,2,3])
         print(ans)
+
 
 if __name__ == '__main__':
     solution = Solution()
