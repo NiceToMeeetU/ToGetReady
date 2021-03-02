@@ -106,14 +106,14 @@ class Solution:
             return False
         from collections import Counter
         hash_nums = Counter(nums)
-        # print(f"{hash_nums=}")
+        print(f"{hash_nums=}")
         for k in sorted(hash_nums.keys()):
-            # print(k)
+            print(k)
             if hash_nums[k] == 0:
                 continue
             i = 0
             while i < w:
-                # print(f"{k=}, {i=}, {hash_nums=}")
+                print(f"{k=}, {i=}, {hash_nums=}")
                 if hash_nums[k + i] == 0:
                     return False
                 hash_nums[k + i] -= 1
@@ -161,12 +161,12 @@ if __name__ == '__main__':
     # print(obj.sumRegion(1, 2, 2, 4))
     solution = Solution()
     # print(solution.corpFlightBookings([[1, 2, 10], [2, 3, 20], [2, 5, 25]], 5))
-    # print(solution.seg([1,2,3,6,2,3,4,7,9], 3))
-    mat = [[0, 0, 0, 1, 1, 1, 0],
-           [0, 1, 0, 1, 1, 0, 0],
-           [1, 1, 0, 0, 0, 0, 0],
-           [0, 0, 0, 1, 1, 1, 0],
-           [1, 1, 0, 1, 1, 1, 0],
-           [1, 1, 0, 0, 1, 1, 0],
-           [0, 0, 0, 0, 0, 1, 0]]
-    print(solution.maxFace(mat))
+    print(solution.seg([1,2,3,6,2,3,4,7,9], 3))
+    # mat = [[0, 0, 0, 1, 1, 1, 0],
+    #        [0, 1, 0, 1, 1, 0, 0],
+    #        [1, 1, 0, 0, 0, 0, 0],
+    #        [0, 0, 0, 1, 1, 1, 0],
+    #        [1, 1, 0, 1, 1, 1, 0],
+    #        [1, 1, 0, 0, 1, 1, 0],
+    #        [0, 0, 0, 0, 0, 1, 0]]
+    # print(solution.maxFace(mat))
