@@ -28,25 +28,6 @@ class NumMatrix:
         return res
 
 
-class Solution:
-    def corpFlightBookings(self, bookings: List[List[int]], n: int) -> List[int]:
-        """
-        1109
-        这里有n个航班，它们分别从 1 到 n 进行编号。
-        我们这儿有一份航班预订表，表中第i条预订记录bookings[i] = [j, k, l]意味着我们在从 j到 k的每个航班上预订了 l个座位。
-        请你返回一个长度为 n 的数组answer，按航班编号顺序返回每个航班上预订的座位数。
-        :param bookings:[[1,2,10],[2,3,20],[2,5,25]]
-        :param n:5
-        :return:[10,55,45,25,25]
-
-        """
-        diff = Difference([0] * n)
-        for j, k, l in bookings:
-            diff.increament(j - 1, k - 1, l)
-
-        return diff.result()
-
-
 class Difference:
     """
     构建差分数组，用于前缀和等类似问题，区间快速增减
@@ -92,6 +73,82 @@ class Difference:
         return res[1:]
 
 
+class Solution:
+    def corpFlightBookings(self, bookings: List[List[int]], n: int) -> List[int]:
+        """
+        1109
+        这里有n个航班，它们分别从 1 到 n 进行编号。
+        我们这儿有一份航班预订表，表中第i条预订记录bookings[i] = [j, k, l]意味着我们在从 j到 k的每个航班上预订了 l个座位。
+        请你返回一个长度为 n 的数组answer，按航班编号顺序返回每个航班上预订的座位数。
+        :param bookings:[[1,2,10],[2,3,20],[2,5,25]]
+        :param n:5
+        :return:[10,55,45,25,25]
+
+        """
+        diff = Difference([0] * n)
+        for j, k, l in bookings:
+            diff.increament(j - 1, k - 1, l)
+
+        return diff.result()
+
+    def seg(self, nums, w):
+        """
+        字节面试题
+        给定一个无序整数数组， 判断这个数组是否可以重新分组，使得每个组内的元素个数为w，且这些数字是连续的数字
+        :param nums:[1,2,3,6,2,3,4,7,8]
+        :param w:3
+        :return:True
+        时间空间都是O(n)
+
+        """
+        n = len(nums)
+        if n % w != 0:
+            return False
+        from collections import Counter
+        hash_nums = Counter(nums)
+        # print(f"{hash_nums=}")
+        for k in sorted(hash_nums.keys()):
+            # print(k)
+            if hash_nums[k] == 0:
+                continue
+            i = 0
+            while i < w:
+                # print(f"{k=}, {i=}, {hash_nums=}")
+                if hash_nums[k + i] == 0:
+                    return False
+                hash_nums[k + i] -= 1
+                i += 1
+        return True
+
+    def maxFace(self, labels: List[List[int]]):
+        """
+        依图面试题
+        给定一个二维整数数组，内容是某图片上各像素点是否为人脸的0，1标签，相邻的1标签可认为是同一张脸，求该张照片里面积最大的人脸的像素点数。
+        :param labels:
+        :return:
+        BFS 经典解法
+        """
+        m, n = len(labels), len(labels[0])
+        import collections
+        res = 0
+        for i in range(m):
+            for j in range(n):
+                if labels[i][j] == 1:
+                    tmp = collections.deque()
+                    tmp_count = 1
+                    labels[i][j] = -1
+                    tmp.append([i, j])
+                    while len(tmp) > 0:
+                        x, y = tmp.popleft()
+                        for new_x, new_y in [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]:
+                            if 0 <= new_x < m and 0 <= new_y < n and labels[new_x][new_y] == 1:
+                                tmp_count += 1
+                                labels[new_x][new_y] = -1
+                                tmp.append([new_x, new_y])
+                    res = max(res, tmp_count)
+        return res
+
+
 if __name__ == '__main__':
     # m = [[3, 0, 1, 4, 2],
     #      [5, 6, 3, 2, 1],
@@ -103,4 +160,13 @@ if __name__ == '__main__':
     # print(obj.sumRegion(1, 1, 2, 2))
     # print(obj.sumRegion(1, 2, 2, 4))
     solution = Solution()
-    print(solution.corpFlightBookings([[1, 2, 10], [2, 3, 20], [2, 5, 25]], 5))
+    # print(solution.corpFlightBookings([[1, 2, 10], [2, 3, 20], [2, 5, 25]], 5))
+    # print(solution.seg([1,2,3,6,2,3,4,7,9], 3))
+    mat = [[0, 0, 0, 1, 1, 1, 0],
+           [0, 1, 0, 1, 1, 0, 0],
+           [1, 1, 0, 0, 0, 0, 0],
+           [0, 0, 0, 1, 1, 1, 0],
+           [1, 1, 0, 1, 1, 1, 0],
+           [1, 1, 0, 0, 1, 1, 0],
+           [0, 0, 0, 0, 0, 1, 0]]
+    print(solution.maxFace(mat))
