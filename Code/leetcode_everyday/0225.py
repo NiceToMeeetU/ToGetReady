@@ -1,4 +1,4 @@
-# coding   : utf-8 
+# coding   : utf-yi
 # @Time    : 21/02/25 9:19
 # @Author  : Wang Yu
 # @Project : ToGetReady
@@ -25,7 +25,7 @@ class Solution:
                 res[j][i] = matrix[i][j]
         return res
 
-    def hasPath(self, maze: List[List[int]], start: List[int], destination: List[int]) -> bool:
+    def hasPath(self, maze: List[List[int]], start: List[int], destination: List[int]) ->  bool:
         """
         490-m
         由空地和墙组成的迷宫中有一个球。球可以向上下左右四个方向滚动，但在遇到墙壁前不会停止滚动。当球停下时，可以选择下一个方向。

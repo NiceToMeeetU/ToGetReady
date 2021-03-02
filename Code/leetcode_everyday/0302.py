@@ -148,6 +148,50 @@ class Solution:
                     res = max(res, tmp_count)
         return res
 
+    def removeDuplicateLetters(self, s: str) -> str:
+        """
+        316
+        给你一个字符串 s ，请你去除字符串中重复的字母，使得每个字母只出现一次。需保证 返回结果的字典序最小（要求不能打乱其他字符的相对位置）。
+        :param s:"bcabc"
+        :return:"abc"
+        """
+        import collections
+        stack = []
+        dict_c = collections.Counter(s)
+        for c in s:
+            if c not in stack:
+                while stack and c < stack[-1] and dict_c[stack[-1]] != 0:
+                    stack.pop()
+                stack.append(c)
+            dict_c[c] -= 1
+
+        return "".join(stack)
+
+
+    def removeKdigits(self, num: str, k: int) -> str:
+        """
+        402
+        给定一个以字符串表示的非负整数num，移除这个数中的 k 位数字，使得剩下的数字最小。
+        注意:
+        num 的长度小于 10002 且 ≥ k。
+        num 不会包含任何前导零。
+        :param num:"1432219"
+        :param k:3
+        :return:"1219"
+        """
+        if k == len(num):
+            return "0"
+        stack = []
+        remain = len(num) - k
+        for digit in num:
+            while stack and k and stack[-1] > digit:
+                stack.pop()
+                k -= 1
+            stack.append(digit)
+        return "".join(stack[:remain]).lstrip('0') or "0"
+
+
+
 
 if __name__ == '__main__':
     # m = [[3, 0, 1, 4, 2],
@@ -161,7 +205,7 @@ if __name__ == '__main__':
     # print(obj.sumRegion(1, 2, 2, 4))
     solution = Solution()
     # print(solution.corpFlightBookings([[1, 2, 10], [2, 3, 20], [2, 5, 25]], 5))
-    print(solution.seg([1,2,3,6,2,3,4,7,9], 3))
+    # print(solution.seg([1,2,3,6,2,3,4,7,9], 3))
     # mat = [[0, 0, 0, 1, 1, 1, 0],
     #        [0, 1, 0, 1, 1, 0, 0],
     #        [1, 1, 0, 0, 0, 0, 0],
@@ -170,3 +214,4 @@ if __name__ == '__main__':
     #        [1, 1, 0, 0, 1, 1, 0],
     #        [0, 0, 0, 0, 0, 1, 0]]
     # print(solution.maxFace(mat))
+    print(solution.removeKdigits("1173",2))
