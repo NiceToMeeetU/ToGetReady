@@ -106,14 +106,14 @@ class Solution:
             return False
         from collections import Counter
         hash_nums = Counter(nums)
-        print(f"{hash_nums=}")
+        # print(f"{hash_nums=}")
         for k in sorted(hash_nums.keys()):
-            print(k)
+            # print(k)
             if hash_nums[k] == 0:
                 continue
             i = 0
             while i < w:
-                print(f"{k=}, {i=}, {hash_nums=}")
+                # print(f"{k=}, {i=}, {hash_nums=}")
                 if hash_nums[k + i] == 0:
                     return False
                 hash_nums[k + i] -= 1
@@ -214,4 +214,8 @@ if __name__ == '__main__':
     #        [1, 1, 0, 0, 1, 1, 0],
     #        [0, 0, 0, 0, 0, 1, 0]]
     # print(solution.maxFace(mat))
-    print(solution.removeKdigits("1173",2))
+    # print(solution.removeKdigits("1173",2))
+    a = list(range(120000))
+    import random
+    random.shuffle(a)
+    print(solution.seg(a, 12))
