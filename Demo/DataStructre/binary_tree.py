@@ -242,6 +242,7 @@ class RecursionProblem:
 
     def isSymmetric(self, root: TreeNode) -> bool:
         """
+        101
         给定一个二叉树，检查它是否是镜像对称的。
         递归和迭代的写法必然会有很多的共通之处
 
@@ -304,5 +305,14 @@ class RecursionProblem:
 
         return helper(root, root)
 
+    def hasPathSum(self, root: TreeNode, targetSum: int) -> bool:
+        """
+        112 路径总和
+        """
+        if not root:
+            return False
+        if not root.left and not root.right:
+            return targetSum == root.val
+        return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)
 
 
