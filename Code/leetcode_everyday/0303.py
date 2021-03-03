@@ -78,7 +78,7 @@ class Solution:
         :return:
         """
 
-    def maxDepth(self, root: TreeNode) -> int:
+    def maxDepth1(self, root: TreeNode) -> int:
         """
         剑指 Offer 55 - I. 二叉树的深度
         输入一棵二叉树的根节点，求该树的深度。
@@ -88,7 +88,101 @@ class Solution:
             return 0
         return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1
 
+    def maxDepth2(self, root: TreeNode) -> int:
+        """
+        求树的最大深度
+        """
+        # BFS 层序遍历广度优先搜索
+        if not root:
+            return 0
+        res = 0
+        queue = [root]
+        while queue:
+            tmp = []
+            for node in queue:
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            queue = tmp
+            res += 1
+        return res
 
+
+    def isSymmetric(self, root: TreeNode) -> bool:
+        """
+        101
+        给定一个二叉树，检查它是否是镜像对称的。
+        递归和迭代的写法必然会有很多的共通之处
+
+        """
+        # 第一遍写成了判断形状，其实题目是要求值和结构，垃圾写法，撂过
+        if not root:
+            return True
+        queue = collections.deque([root])
+        while queue:
+            level = len(queue)
+            tmp = []
+            for i in range(level):
+                curNode = queue.popleft()
+                if curNode.left:
+                    queue.append(curNode.left)
+                    tmp.append(curNode.left.val)
+                else:
+                    tmp.append(None)
+                if curNode.right:
+                    queue.append(curNode.right)
+                    tmp.append(curNode.right.val)
+                else:
+                    tmp.append(None)
+            if tmp != tmp[::-1]:
+                return False
+        # return True
+        #####
+        # 迭代
+        if not root or not (root.left or root.right): # 涉及对称的条件方法，直接判断是否平衡
+            return True
+        queue_ = [root.left, root.right]
+        while queue_:
+            left = queue_.pop(0)
+            right = queue_.pop(0)
+            if not (left or right):
+                continue
+            if not (left and right):
+                return False
+            if left.val != right.val:
+                return False
+
+            # 关键来了，依次按顺序放入队列
+            queue_.append(left.left)
+            queue_.append(right.right)
+            queue_.append(left.right)
+            queue_.append(right.left)
+
+        # return True
+
+        # 递归
+        def helper(left_, right_):
+            if not (left_ or right_):     # 两个节点都为空
+                return True
+            if not (left_ and right_):    # 两个节点只有一个为空
+                return False
+            if left_.val != right_.val:
+                return False
+            # 这里极其容易错，注意！
+            return helper(left_.left, right_.right) and helper(left_.right, right_.left)
+
+        return helper(root, root)
+
+    def hasPathSum(self, root: TreeNode, targetSum: int) -> bool:
+        """
+        112 路径总和
+        """
+        if not root:
+            return False
+        if not root.left and not root.right:
+            return targetSum == root.val
+        return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val

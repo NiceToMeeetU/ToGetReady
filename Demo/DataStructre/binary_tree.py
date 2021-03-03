@@ -293,15 +293,15 @@ class RecursionProblem:
         # return True
 
         # 递归
-        def helper(left, right):
-            if not (left or right):     # 两个节点都为空
+        def helper(left_, right_):
+            if not (left_ or right_):     # 两个节点都为空
                 return True
-            if not (left and right):    # 两个节点只有一个为空
+            if not (left_ and right_):    # 两个节点只有一个为空
                 return False
-            if left.val != right.val:
+            if left_.val != right_.val:
                 return False
             # 这里极其容易错，注意！
-            return helper(left.left, right.right) and helper(left.right, right.left)
+            return helper(left_.left, right_.right) and helper(left_.right, right_.left)
 
         return helper(root, root)
 
