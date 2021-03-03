@@ -200,7 +200,17 @@ class RecursionProblem:
                 return the answer if needed
 
         自底而上    Buttom-Up
+            首先对所有子节点递归调用函数，然后根据返回值和根节点本身的值得到答案。
+            可以认为是一种后序遍历
 
+            return specific value for null node
+            left_ans = bottom_up(root.left)			// call function recursively for left child
+            right_ans = bottom_up(root.right)		// call function recursively for right child
+            return answers                           // answer <-- left_ans, right_ans, root.val
+
+    遇到问题时思考：
+    1、能确定一些参数，从该节点自身解决出发寻找答案吗？
+    2、可以使用这些参数和节点本身的值来决定说明应该是传递给它子节点的参数吗？
 
     """
 
@@ -217,7 +227,82 @@ class RecursionProblem:
         if not root:
             return 0
         res = 0
-        queue = collections.deque([root])
+        queue = [root]
         while queue:
             tmp = []
             for node in queue:
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            queue = tmp
+            res += 1
+        return res
+
+
+    def isSymmetric(self, root: TreeNode) -> bool:
+        """
+        给定一个二叉树，检查它是否是镜像对称的。
+        递归和迭代的写法必然会有很多的共通之处
+
+        """
+        # 第一遍写成了判断形状，其实题目是要求值和结构，垃圾写法，撂过
+        if not root:
+            return True
+        queue = collections.deque([root])
+        while queue:
+            level = len(queue)
+            tmp = []
+            for i in range(level):
+                curNode = queue.popleft()
+                if curNode.left:
+                    queue.append(curNode.left)
+                    tmp.append(curNode.left.val)
+                else:
+                    tmp.append(None)
+                if curNode.right:
+                    queue.append(curNode.right)
+                    tmp.append(curNode.right.val)
+                else:
+                    tmp.append(None)
+            if tmp != tmp[::-1]:
+                return False
+        # return True
+        #####
+        # 迭代
+        if not root or not (root.left or root.right): # 涉及对称的条件方法，直接判断是否平衡
+            return True
+        queue_ = [root.left, root.right]
+        while queue_:
+            left = queue_.pop(0)
+            right = queue_.pop(0)
+            if not (left or right):
+                continue
+            if not (left and right):
+                return False
+            if left.val != right.val:
+                return False
+
+            # 关键来了，依次按顺序放入队列
+            queue_.append(left.left)
+            queue_.append(right.right)
+            queue_.append(left.right)
+            queue_.append(right.left)
+
+        # return True
+
+        # 递归
+        def helper(left, right):
+            if not (left or right):     # 两个节点都为空
+                return True
+            if not (left and right):    # 两个节点只有一个为空
+                return False
+            if left.val != right.val:
+                return False
+            # 这里极其容易错，注意！
+            return helper(left.left, right.right) and helper(left.right, right.left)
+
+        return helper(root, root)
+
+
+
