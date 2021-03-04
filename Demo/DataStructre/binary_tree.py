@@ -31,6 +31,15 @@ class Traverse:
             后序遍历
         广度优先搜索 —— 队列
             层序遍历
+
+    遍历基操
+         1
+       2   3
+     4  5 6  7
+    preorder:   1 2 4 5 3 6 7   根左右
+    inorder:    4 2 5 1 6 3 7   左根右
+    postorder:  4 5 2 6 7 3 1   左右根
+    除开根节点以外的部分一定是左右对应的
     """
 
     def preorderTraversalRecursion(self, root: TreeNode):
@@ -239,7 +248,6 @@ class RecursionProblem:
             res += 1
         return res
 
-
     def isSymmetric(self, root: TreeNode) -> bool:
         """
         101
@@ -271,7 +279,7 @@ class RecursionProblem:
         # return True
         #####
         # 迭代
-        if not root or not (root.left or root.right): # 涉及对称的条件方法，直接判断是否平衡
+        if not root or not (root.left or root.right):  # 涉及对称的条件方法，直接判断是否平衡
             return True
         queue_ = [root.left, root.right]
         while queue_:
@@ -294,9 +302,9 @@ class RecursionProblem:
 
         # 递归
         def helper(left_, right_):
-            if not (left_ or right_):     # 两个节点都为空
+            if not (left_ or right_):  # 两个节点都为空
                 return True
-            if not (left_ and right_):    # 两个节点只有一个为空
+            if not (left_ and right_):  # 两个节点只有一个为空
                 return False
             if left_.val != right_.val:
                 return False
@@ -316,3 +324,59 @@ class RecursionProblem:
         return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)
 
 
+class ReBuild:
+    """
+    逆向遍历基操
+         1
+       2   3
+     4  5 6  7
+    preorder:   1 2 4 5 3 6 7   根左右
+    inorder:    4 2 5 1 6 3 7   左根右
+    postorder:  4 5 2 6 7 3 1   左右根
+    除开根节点以外的部分一定是左右对应的
+    前序的首位必然是根节点，末位必然是最右下角的子树
+    中序的首位必然是最左下角的子树，末位必然是最右下角的子树
+    后序的首位必然是最左下角的子树，末位必然是根节点
+    根节点在中序遍历结果中把整棵树分成了左右树
+    还是离不开递归思想
+    """
+
+    def buildTreeInPost(self, inorder: List[int], postorder: List[int]):
+        """
+        从中序与后序遍历序列构造二叉树
+        根据一棵树的中序遍历与后序遍历构造二叉树。
+        注意:
+        你可以假设树中没有重复的元素。
+        :param inorder:[9,3,15,20,7]
+        :param postorder:[9,15,7,20,3]
+        :return:
+
+        """
+        if not postorder:
+            return None
+        root = TreeNode(postorder[-1])
+        n = inorder.index(root.val)  # n - 1 即左侧子树的节点数
+        root.left = self.buildTree(inorder[:n], postorder[:n])
+        root.right = self.buildTree(inorder[n + 1:], postorder[n:-1])
+        return root
+
+    def buildTreePreIn(self, preorder: List[int], inorder: List[int]):
+        """
+        根据一棵树的前序遍历与中序遍历构造二叉树。
+        :param preorder:
+        :param inorder:
+        :return:
+        """
+        if not preorder:
+            return None
+        root = TreeNode(preorder[0])
+        n = inorder.index(root.val)
+
+        root.left = self.buildTreePreIn(preorder[1:n + 1], inorder[:n])
+        root.right = self.buildTreePreIn(preorder[n + 1:], inorder[n + 1:])
+        return root
+
+    def buildTreePrePost(self, preorder: List[int], inorder: List[int]):
+        """
+        根据一棵树的前序遍历与后序遍历构造二叉树。
+        """
