@@ -338,7 +338,13 @@ class ReBuild:
     中序的首位必然是最左下角的子树，末位必然是最右下角的子树
     后序的首位必然是最左下角的子树，末位必然是根节点
     根节点在中序遍历结果中把整棵树分成了左右树
+    没有中序遍历的话，前序遍历的[1]是根节点的左节点，
+    该节点在后序遍历中是左侧子树最后一个遍历到的
     还是离不开递归思想
+
+    1、找根节点
+    2、确定左右子树节点数
+    3、递归
     """
 
     def buildTreeInPost(self, inorder: List[int], postorder: List[int]):
@@ -355,9 +361,9 @@ class ReBuild:
         if not postorder:
             return None
         root = TreeNode(postorder[-1])
-        n = inorder.index(root.val)  # n - 1 即左侧子树的节点数
-        root.left = self.buildTree(inorder[:n], postorder[:n])
-        root.right = self.buildTree(inorder[n + 1:], postorder[n:-1])
+        L = inorder.index(root.val)  # 最关键的步骤，可用哈希表优化
+        root.left = self.buildTree(inorder[:L], postorder[:L])
+        root.right = self.buildTree(inorder[L + 1:], postorder[L:-1])
         return root
 
     def buildTreePreIn(self, preorder: List[int], inorder: List[int]):
@@ -370,13 +376,85 @@ class ReBuild:
         if not preorder:
             return None
         root = TreeNode(preorder[0])
-        n = inorder.index(root.val)
-
-        root.left = self.buildTreePreIn(preorder[1:n + 1], inorder[:n])
-        root.right = self.buildTreePreIn(preorder[n + 1:], inorder[n + 1:])
+        L = inorder.index(root.val)  # 最关键的步骤
+        root.left = self.buildTreePreIn(preorder[1:L + 1], inorder[:L])
+        root.right = self.buildTreePreIn(preorder[L + 1:], inorder[L + 1:])
         return root
 
-    def buildTreePrePost(self, preorder: List[int], inorder: List[int]):
+    # 按照同样的index查找根节点位置从而确定左右子树数量的思路无法解决前后遍历的重建，换思路！
+    # 其实也还是可以的
+    def buildTreePrePost(self, preorder: List[int], postorder: List[int]):
         """
         根据一棵树的前序遍历与后序遍历构造二叉树。
+        如果没有中序的遍历，那么就不能明确左右子树的数量
+        前序遍历的[1]是根节点的左节点，
+        该节点在后序遍历中是左侧子树最后一个遍历到的
+        由此即可以确定左子树的数量
         """
+        if not preorder:
+            return None
+        root = TreeNode(preorder[0])
+        if len(preorder) == 1:
+            return root
+        L = postorder.index(preorder[1]) + 1  # 最关键的步骤
+        root.left = self.buildTreePrePost(preorder[1:L + 1], postorder[:L])
+        root.right = self.buildTreePrePost(preorder[L + 1:], postorder[L: -1])
+        return root
+
+    # 递归法写完，同样地再来一遍迭代方法加强理解
+    def buildTreePreIn_(self, preorder: List[int], inorder: List[int]):
+        """
+        迭代法从前序中序遍历重建二叉树
+        1、用栈和指针重建二叉树，初始栈中存放根节点，指针指向中序遍历的第一个节点；
+        2、依次枚举前序遍历[1:]所有节点，
+                如果index恰好指向栈顶节点，则不断弹出栈顶节点并向右移动index，并将当前节点作为最后一个弹出的节点的右儿子；
+                如果index和栈顶节点不同，则将当前节点作为栈顶节点的做儿子；
+        3、最后将当前节点入栈。
+        """
+        if not preorder:
+            return None
+        root = TreeNode(preorder[0])
+        stack = [root]
+        inorderIndex = 0
+        for i in range(1, len(preorder)):
+            preorderVal = preorder[i]
+            node = stack[-1]
+            if node.val != inorder[inorderIndex]:
+                node.left = TreeNode(preorderVal)
+                stack.append(node.left)
+            else:
+                while stack and stack[-1].val == inorder[inorderIndex]:
+                    node = stack.pop()
+                    inorderIndex += 1
+                node.right = TreeNode(preorderVal)
+                stack.append(node.right)
+        return root
+
+    def buildTreePrePost_(self, preorder: List[int], postorder: List[int]):
+        """
+        迭代法从前序后序遍历中重建二叉树
+        不写了，抄一个基于队列的迭代方法
+        """
+        addedNodes = set(preorder[0])
+        dq = collections.deque([preorder[0]])
+        res = dq[0]
+        pre2id = {node: idx for idx, node in enumerate(preorder)}
+        post2id = {node: idx for idx, node in enumerate(postorder)}
+        n = len(preorder)
+        while len(addedNodes) < n:
+            root = dq.popleft()
+            in_pos, post_pos = pre2id[root.val], post2id[root.val]
+            left, right = preorder[min(in_pos + 1, n - 1)], postorder[post_pos - 1]
+            if left not in addedNodes:
+                root.left = TreeNode(left)
+                dq.append(root.left)
+                addedNodes.add(left)
+            if right not in  addedNodes:
+                root.right = TreeNode(right)
+                dq.append(root.right)
+                addedNodes.add(right)
+            return res
+
+
+
+
