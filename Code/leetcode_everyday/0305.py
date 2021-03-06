@@ -11,7 +11,11 @@ import collections
 
 
 class Node:
+    """
+    树的每一个节点多一个指针
+    """
     def __init__(self, val: int = 0, left: 'Node' = None, right: 'Node' = None, next_: 'Node' = None):
+
         self.val = val
         self.left = left
         self.right = right
