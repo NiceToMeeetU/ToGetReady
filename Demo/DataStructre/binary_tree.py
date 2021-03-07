@@ -40,7 +40,27 @@ class Traverse:
     inorder:    4 2 5 1 6 3 7   左根右
     postorder:  4 5 2 6 7 3 1   左右根
     除开根节点以外的部分一定是左右对应的
+
+    03.07 重写极简版递归基操
     """
+    def __init__(self):
+        self.traversalpath = []
+
+    def preorder_(self,root):
+        if root:
+            self.traversalpath.append(root.val)
+            self.preorder_(root.left)
+            self.preorder_(root.right)
+    def inorder_(self,root):
+        if root:
+            self.inorder_(root.left)
+            self.traversalpath.append(root.val)
+            self.inorder_(root.right)
+    def postorder_(self,root):
+        if root:
+            self.postorder_(root.left)
+            self.postorder_(root.right)
+            self.traversalpath.append(root.val)
 
     def preorderTraversalRecursion(self, root: TreeNode):
         """
