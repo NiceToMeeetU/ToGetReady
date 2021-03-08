@@ -10,6 +10,7 @@
 二叉树的基本学习
 - 树的遍历
 - 递归解决问题
+- 二叉搜索树相关
 """
 
 import collections
@@ -476,5 +477,200 @@ class ReBuild:
             return res
 
 
+class BST:
+    """
+    二叉搜索树相关问题
+    - 验证
+    - 增删改查
+    - 经典问题相比于普通二叉树的不同
 
+       二叉搜索树定义：
+    1、所有的左子树节点都比根节点小；
+    2、所有的右子树节点都比根节点大；
+    3、左右左子树、右子树本身都是二叉搜索树。
+
+    不能只判断左节点右节点，而是要看整个子树
+    反正不会做了就中序遍历
+    """
+    def isValidBST(self, root: TreeNode) -> bool:
+        """
+        98 验证二叉搜索树
+        二叉搜索树定义：
+        1、所有的左子树节点都比根节点小；
+        2、所有的右子树节点都比根节点大；
+        3、左右左子树、右子树本身都是二叉搜索树。
+
+        不能只判断左节点右节点，而是要看整个子树
+        """
+
+        # method 1，通过中序遍历树，判断前后是否始终保持升序
+        self.prev = None
+        def helper1(node):
+            if not node:
+                return True
+            if not helper1(node.left):
+                return False
+            if self.prev and self.prev.val >= node.val:
+                return False
+            self.prev = node
+            return helper1(node.right)
+        # return helper(root)
+
+        # method 2，递归写法
+        # 需要考率将阈值作为参数传递进去
+        def helper(node: TreeNode, min_ = float("-inf"), max_= float("inf")):
+            if not node:
+                return True
+            if node.val <= min_ or node.val >= max_:
+                return False
+            if not helper(node.left, min_, node.val):
+                return False
+            if not helper(node.right, node.val, max_):
+                return False
+            return True
+        return helper(root)
+
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        """
+        235、二叉搜索树的最近公共祖先
+        """
+        # 回顾普通二叉树最近公共祖先的求法
+        if not root or root == p or root == q:
+            return root
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+        if not left:
+            return right
+        if not right:
+            return left
+        # return root
+
+        # 但是二叉搜索树有数值关系，可以直接利用上简化问题
+        # 只要两个两个节点与该根节点的相对大小关系不同，那么其必然位于不同的左右子树上
+        if p.val < root.val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if p.val > root.val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        # return root
+
+        # 同样可以采用迭代的方法做
+        while root:
+            if p.val < root.val > q.val:
+                root = root.left
+            elif p.val > root.val < q.val:
+                root = root.right
+            else:
+                return root
+
+    def convertBST(self, root: TreeNode) -> TreeNode:
+        """
+        538. 把二叉搜索树转换为累加树
+        给出二叉 搜索 树的根节点，该树的节点值各不相同，请你将其转换为累加树（Greater Sum Tree），
+        使每个节点 node 的新值等于原树中大于或等于 node.val 的值之和。
+        提醒一下，二叉搜索树满足下列约束条件：
+        节点的左子树仅包含键 小于 节点键的节点。
+        节点的右子树仅包含键 大于 节点键的节点。
+        左右子树也必须是二叉搜索树。
+
+        递归法解决
+        """
+        self.sum_ = 0
+        def inorder(node):
+            if node:
+                inorder(node.right)
+                node.val += self.sum_
+                self.sum_= node.val
+                inorder(node.left)
+        inorder(root)
+        return root
+
+    def bstToGst(self, root: TreeNode) -> TreeNode:
+        """
+        1038. 把二叉搜索树转换为累加树
+        迭代法解决
+        二叉搜索树的累加那就 右中左遍历即可
+        """
+        stack = []
+        node = root
+        sum_ = 0
+        while stack or node:
+            while node:
+                stack.append(node)
+                node = node.right
+            node = stack.pop()
+            node.val += sum_
+            sum_ = node.val
+            node = node.left
+        return root
+
+    # BST的增删改查完全是一样的套路，判断大小后递归就好
+
+    def searchBST(self, root: TreeNode, val: int):
+        """
+        700. 二叉搜索树的搜索
+        基本套路
+        """
+        if not root:
+            return None
+        if root.val == val:
+            return root
+        elif root.val < val:
+            return self.searchBST(root.right, val)
+        elif root.val > val:
+            return self.searchBST(root.left, val)
+
+
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
+        """
+        701. 二叉搜索树中的插入操作
+        给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。
+        返回插入后二叉搜索树的根节点。 输入数据 保证 ，新值和原始二叉搜索树中的任意节点值都不同。
+
+        注意，可能存在多种有效的插入方式，只要树在插入后仍保持为二叉搜索树即可。
+        你可以返回 任意有效的结果 。
+        """
+        if not root:
+            return TreeNode(val)
+        if root.val < val:  # 数太大了就插右子树
+            root.right = self.insertIntoBST(root.right, val)
+        elif root.val > val:    # 数太小了就插左子树
+            root.left = self.insertIntoBST(root.left,val)
+        return root
+
+
+    def deleteNode(self, root: TreeNode, key: int):
+        """
+        450. 删除二叉搜索树中的节点
+        给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，
+        并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
+        一般来说，删除节点可分为两个步骤：
+        首先找到需要删除的节点；
+        如果找到了，删除它。
+        说明： 要求算法时间复杂度为O(h)，h 为树的高度。
+
+        同样的递归套路，弄清楚需要删除的节点的后序情况即可，0，1，2三种情况
+
+        """
+        if not root:
+            return None
+        if root.val < key:  # 在右子树上
+            root.right = self.deleteNode(root.right, key)
+            return root
+        elif root.val > key:    # 在左子树上
+            root.left = self.deleteNode(root.left, key)
+            return root
+        else:   # 关键来了，找到了节点位置
+            # 分别判断左右子树是否存在就等于判断该节点是否有子树，包含了0的情况
+            #
+            if not root.left:
+                return root.right
+            elif not root.right:
+                return root.left
+            else:
+                p = root.right
+                while p.left:
+                    p = p.left
+                root.val = p.val
+                root.right = self.deleteNode(root.right, p.val)
+        return root
 
