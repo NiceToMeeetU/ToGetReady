@@ -44,20 +44,23 @@ class Traverse:
 
     03.07 重写极简版递归基操
     """
+
     def __init__(self):
         self.traversalpath = []
 
-    def preorder_(self,root):
+    def preorder_(self, root):
         if root:
             self.traversalpath.append(root.val)
             self.preorder_(root.left)
             self.preorder_(root.right)
-    def inorder_(self,root):
+
+    def inorder_(self, root):
         if root:
             self.inorder_(root.left)
             self.traversalpath.append(root.val)
             self.inorder_(root.right)
-    def postorder_(self,root):
+
+    def postorder_(self, root):
         if root:
             self.postorder_(root.left)
             self.postorder_(root.right)
@@ -202,16 +205,31 @@ class Traverse:
         while queue:
             level = len(queue)  # 第N层最多有N个节点
             tmp = []
-            for i in range(level):
-                curNode = queue.popleft()
-                tmp.append(curNode.val)
-                if curNode.left:
-                    queue.append(curNode.left)
-                if curNode.right:
-                    queue.append(curNode.right)
+            for _ in range(level):
+                node = queue.popleft()
+                tmp.append(node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
             res.append(tmp)
         return res
 
+    def levelOrderRecursion(self, root: TreeNode):
+        """
+        层序遍历的递归实现
+        """
+        def bfs(node, level):
+            if not node:
+                return
+            res[level - 1].append(node.val)
+            if len(res) == level:
+                res.append([])
+            bfs(node.left, level + 1)
+            bfs(node.right, level + 1)
+        res = [[]]
+        bfs(root, 1)
+        return res[1:]
 
 class RecursionProblem:
     """
@@ -344,6 +362,59 @@ class RecursionProblem:
             return targetSum == root.val
         return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)
 
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        """
+        235、二叉搜索树的最近公共祖先
+        """
+        # 回顾普通二叉树最近公共祖先的求法
+        if not root or root == p or root == q:
+            return root
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+        if not left:
+            return right
+        if not right:
+            return left
+        # return root
+
+        # 但是二叉搜索树有数值关系，可以直接利用上简化问题
+        # 只要两个两个节点与该根节点的相对大小关系不同，那么其必然位于不同的左右子树上
+        if p.val < root.val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if p.val > root.val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        # return root
+
+        # 同样可以采用迭代的方法做
+        while root:
+            if p.val < root.val > q.val:
+                root = root.left
+            elif p.val > root.val < q.val:
+                root = root.right
+            else:
+                return root
+
+    def countNodes(self, root: TreeNode) -> int:
+        """
+        222. 完全二叉树的节点个数
+        普通二叉树节点个数直接遍历解决，O(n)
+        满二叉树节点个数求层深h，2^h - 1，O(logn)
+        完全二叉树考虑其子树必然有一个满二叉树和完全二叉树
+        所以不需要遍历，同样按深度求解即可
+        """
+        import math
+        l, r = root, root
+        ld, rd = 0, 0
+        while l:
+            l = l.left
+            ld += 1
+        while r:
+            r = r.right
+            rd += 1
+        if ld == rd:
+            return int(math.pow(2, rd)) - 1
+        return self.countNodes(root.left) + self.countNodes(root.right) + 1
+
 
 class ReBuild:
     """
@@ -385,7 +456,7 @@ class ReBuild:
         L = inorder.index(root.val)  # 最关键的步骤，可用哈希表优化
         root.left = self.buildTree(inorder[:L], postorder[:L])
         root.right = self.buildTree(inorder[L + 1:], postorder[L:-1])
-        return root
+        # return root
 
     def buildTreePreIn(self, preorder: List[int], inorder: List[int]):
         """
@@ -397,10 +468,26 @@ class ReBuild:
         if not preorder:
             return None
         root = TreeNode(preorder[0])
-        L = inorder.index(root.val)  # 最关键的步骤
+        L = inorder.index(root.val)  # 最关键的步骤，可用哈希表优化
         root.left = self.buildTreePreIn(preorder[1:L + 1], inorder[:L])
         root.right = self.buildTreePreIn(preorder[L + 1:], inorder[L + 1:])
-        return root
+
+        # return root
+
+        # 再写一个带辅助函数哈希表优化的方法：
+        def recur(root_idx, left, right):
+            if left > right:
+                return
+            node = TreeNode(preorder[root_idx])
+            i_ = dic[preorder[root_idx]]  # 查找其在中序遍历的位置
+            node.left = recur(root_idx + 1, left, i_ - 1)
+            node.right = recur(i_ - left + root_idx + 1, i_ + 1, right)
+            return node
+
+        dic = {}
+        for i in range(len(inorder)):
+            dic[inorder[i]] = i
+        return recur(0, 0, len(inorder) - 1)
 
     # 按照同样的index查找根节点位置从而确定左右子树数量的思路无法解决前后遍历的重建，换思路！
     # 其实也还是可以的
@@ -423,6 +510,7 @@ class ReBuild:
         return root
 
     # 递归法写完，同样地再来一遍迭代方法加强理解
+    # 实测迭代法快的多的多啊
     def buildTreePreIn_(self, preorder: List[int], inorder: List[int]):
         """
         迭代法从前序中序遍历重建二叉树
@@ -436,18 +524,18 @@ class ReBuild:
             return None
         root = TreeNode(preorder[0])
         stack = [root]
-        inorderIndex = 0
+        idx = 0
         for i in range(1, len(preorder)):
-            preorderVal = preorder[i]
+            preVal = preorder[i]
             node = stack[-1]
-            if node.val != inorder[inorderIndex]:
-                node.left = TreeNode(preorderVal)
+            if node.val != inorder[idx]:
+                node.left = TreeNode(preVal)
                 stack.append(node.left)
             else:
-                while stack and stack[-1].val == inorder[inorderIndex]:
+                while stack and stack[-1].val == inorder[idx]:
                     node = stack.pop()
-                    inorderIndex += 1
-                node.right = TreeNode(preorderVal)
+                    idx += 1
+                node.right = TreeNode(preVal)
                 stack.append(node.right)
         return root
 
@@ -470,7 +558,7 @@ class ReBuild:
                 root.left = TreeNode(left)
                 dq.append(root.left)
                 addedNodes.add(left)
-            if right not in  addedNodes:
+            if right not in addedNodes:
                 root.right = TreeNode(right)
                 dq.append(root.right)
                 addedNodes.add(right)
@@ -492,6 +580,7 @@ class BST:
     不能只判断左节点右节点，而是要看整个子树
     反正不会做了就中序遍历
     """
+
     def isValidBST(self, root: TreeNode) -> bool:
         """
         98 验证二叉搜索树
@@ -505,6 +594,7 @@ class BST:
 
         # method 1，通过中序遍历树，判断前后是否始终保持升序
         self.prev = None
+
         def helper1(node):
             if not node:
                 return True
@@ -514,11 +604,12 @@ class BST:
                 return False
             self.prev = node
             return helper1(node.right)
+
         # return helper(root)
 
         # method 2，递归写法
         # 需要考率将阈值作为参数传递进去
-        def helper(node: TreeNode, min_ = float("-inf"), max_= float("inf")):
+        def helper(node: TreeNode, min_=float("-inf"), max_=float("inf")):
             if not node:
                 return True
             if node.val <= min_ or node.val >= max_:
@@ -528,6 +619,7 @@ class BST:
             if not helper(node.right, node.val, max_):
                 return False
             return True
+
         return helper(root)
 
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
@@ -575,12 +667,14 @@ class BST:
         递归法解决
         """
         self.sum_ = 0
+
         def inorder(node):
             if node:
                 inorder(node.right)
                 node.val += self.sum_
-                self.sum_= node.val
+                self.sum_ = node.val
                 inorder(node.left)
+
         inorder(root)
         return root
 
@@ -619,7 +713,6 @@ class BST:
         elif root.val > val:
             return self.searchBST(root.left, val)
 
-
     def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
         """
         701. 二叉搜索树中的插入操作
@@ -633,10 +726,9 @@ class BST:
             return TreeNode(val)
         if root.val < val:  # 数太大了就插右子树
             root.right = self.insertIntoBST(root.right, val)
-        elif root.val > val:    # 数太小了就插左子树
-            root.left = self.insertIntoBST(root.left,val)
+        elif root.val > val:  # 数太小了就插左子树
+            root.left = self.insertIntoBST(root.left, val)
         return root
-
 
     def deleteNode(self, root: TreeNode, key: int):
         """
@@ -656,10 +748,10 @@ class BST:
         if root.val < key:  # 在右子树上
             root.right = self.deleteNode(root.right, key)
             return root
-        elif root.val > key:    # 在左子树上
+        elif root.val > key:  # 在左子树上
             root.left = self.deleteNode(root.left, key)
             return root
-        else:   # 关键来了，找到了节点位置
+        else:  # 关键来了，找到了节点位置
             # 分别判断左右子树是否存在就等于判断该节点是否有子树，包含了0的情况
             #
             if not root.left:
@@ -674,3 +766,53 @@ class BST:
                 root.right = self.deleteNode(root.right, p.val)
         return root
 
+
+class Codec:
+    """
+    层序遍历的二叉树的序列化与反序列化
+    """
+
+    def serialize(self, root: TreeNode):
+        """
+        二叉树的序列化
+        """
+        # 迭代写法
+        if not root:
+            return "[]"
+        res = []
+        queue = [root]
+        while queue:
+            node = queue.pop(0)
+            if node:
+                res.append(str(node.val))
+                queue.append(node.left)
+                queue.append(node.right)
+            else:
+                res.append("null")
+        return '[' + ",".join(res) + "]"
+        # 卧槽居然没办法用递归实现
+
+
+
+
+    def deserialize(self, strs):
+        """
+        二叉树的反序列化
+        """
+        if strs == "[]":
+            return None
+        # 不为空的话先把根节点建立起来
+        vals, i = strs[1:-1].strip().split(','), 1
+        root = TreeNode(int(val[0]))
+        queue = [root]
+        while queue:
+            node = queue.pop(0)
+            if vals[i] != "null":
+                node.left = TreeNode(int(vals[i]))
+                queue.append(node.left)
+            i += 1
+            if vals[i] != "null":
+                node.right = TreeNode(int(vals[i]))
+                queue.append(node.right)
+            i += 1
+        return root
