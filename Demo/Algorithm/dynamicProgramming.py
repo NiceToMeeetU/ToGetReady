@@ -222,7 +222,26 @@ class HouseRobber:
         :param nums:[1,2,3,1]
         :return:4
         最后一个和第一个不能同时偷
+        分情况讨论？
         """
+        # 来，先来个憨憨写法试一下，max(helper(nums[1:]), helper(nums[:-1]))
+        # 憨憨方法成功
+        if not nums:
+            return 0
+        n = len(nums)
+        if n < 2:
+            return max(nums)
+        dp1 = [0] * n
+        dp2 = [0] * n
+        dp1[0] = 0
+        dp2[0] = nums[0]
+        dp1[1] = nums[1]
+        dp2[1] = max(nums[0], nums[1])
+        for i in range(2, n):
+            dp1[i] = max(dp1[i - 1], dp1[i - 2] + nums[i])
+            dp2[i] = max(dp2[i - 1], dp2[i - 2] + nums[i])
+        return amx(dp1[-1], dp2[-2])
+
 
 
     def rob3(self, root: TreeNode) -> int:
@@ -235,7 +254,26 @@ class HouseRobber:
         如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
 
         计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+        层序遍历？
         """
+        def helper(node):
+            res = [0, 0]
+            if not node:
+                return res
+            if node.left:
+                res_left = helper(node.left)
+            else:
+                res_left = [0, 0]
+            if node.right:
+                res_right = helper(node.right)
+            else:
+                res_right = [0, 0]
+
+            res[0] = max(res_left[0], res_left[1] + max(res_right[0], res_right[1]))
+            res[1] = node.val + res_right[0] + res_left[0]
+
+        res = helper(root)
+        return max(res)
 
     class TreeNode:
         def __init__(self, val=0, left=None, right=None):
