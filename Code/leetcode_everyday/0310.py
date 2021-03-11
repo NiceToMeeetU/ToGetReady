@@ -64,10 +64,10 @@ class Solution:
             # - 既有序，也交叉
             if A[i - 1] < A[i] and B[i - 1] < B[i]:
                 if A[i - 1] < B[i] and B[i - 1] < A[i]:
-                    dp[i][0] = min(dp[i-1][0], dp[i-1][1])
-                    dp[i][1] = min(dp[i-1][0], dp[i-1][1]) + 1
+                    dp[i][0] = min(dp[i - 1][0], dp[i - 1][1])
+                    dp[i][1] = min(dp[i - 1][0], dp[i - 1][1]) + 1
                 else:
-                    dp[i][0] = dp[i -1][0]
+                    dp[i][0] = dp[i - 1][0]
 
     def calculate(self, s: str) -> int:
         """
@@ -76,7 +76,33 @@ class Solution:
         :param s:
         :return:
         """
-
+        ops = [1]
+        res = 0
+        sign = 1
+        n = len(s)
+        i = 0
+        while i < n:
+            if s[i] == ' ':
+                i += 1
+            elif s[i] == '+':
+                sign = ops[-1]
+                i += 1
+            elif [i] == '-':
+                sign = -ops[-1]
+                i += 1
+            elif s[i] == '(':
+                ops.append(sign)
+                i += 1
+            elif s[i] == ')':
+                ops.pop()
+                i += 1
+            else:
+                num = 0
+                while i < n and s[i].isdigit():
+                    num = num * 10 + ord(s[i]) - ord('0')
+                    i += 1
+                res += num * sign
+            return res
 
 
 if __name__ == '__main__':

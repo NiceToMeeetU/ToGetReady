@@ -41,11 +41,74 @@
 from typing import List
 
 
+class Stock:
+    """
+    买卖股票问题
+    """
 
+    def maxProfit(self, prices: List[int]) -> int:
+        """
+        121. 买卖股票的最佳时机
+        k = 1
+        """
+        # 一次遍历
+        minPrice = int(1e9)
+        maxProfit = 0
+        for p in prices:
+            maxProfit = max(maxProfit, p - minPrice)
+            minPrice = min(minPrice, p)
+        # return maxProfit
 
+        # 初步动规
+        dp = [[0, 0]] * len(prices)
+        dp[0][1] = -prices[0]
+        for i in range(1, len(prices)):
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+            dp[i][1] = max(dp[i - 1][1], -prices[i])
+        # return dp[-1][0]
 
+        # 空间优化动规
+        n = len(prices)
+        dp_i_0 = 0
+        dp_i_1 = float("-inf")
+        for i in range(n):
+            dp_i_0 = max(dp_i_0, dp_i_1 + prices[i])
+            dp_i_1 = max(dp_i_1, -prices[i])
+        return dp_i_0
 
+    def maxProfit2(self, prices: List[int]) -> int:
+        """
+        122. 买卖股票的最佳时机Ⅱ
+        k = inf
+        """
+        dp = [[0, 0]] * len(prices)
+        dp[0][1] = -prices[0]
+        for i in range(1, len(prices)):
+            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+            dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])
+        # return dp[-1][0]
 
+        # 优化一下
+        n = len(prices)
+        dp_i_0 = 0
+        dp_i_1 = float("-inf")
+        for i in range(n):
+            tmp = dp_i_0
+            dp_i_0 = max(dp_i_0, dp_i_1 + prices[i])
+            dp_i_1 = max(dp_i_1, tmp - prices[i])
+        return dp_i_0
 
-
-
+    def maxProfit3(self, prices: List[int]) -> int:
+        """
+        123. 买卖股票的最佳时机Ⅳ
+        k = 2
+        """
+        max_k = 2
+        n = len(prices)
+        dp = [[[0, 0]] * (max_k + 1)] * n
+        for i in range(n):
+            for k in range(max_k + 1):
+                if i > 0:
+                    dp[i][k][0] = max()
+                else:   # base case
+                    dp[0][k][0] = 0
