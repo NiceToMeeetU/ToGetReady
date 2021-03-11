@@ -100,15 +100,145 @@ class Stock:
 
     def maxProfit3(self, prices: List[int]) -> int:
         """
-        123. 买卖股票的最佳时机Ⅳ
+        123. 买卖股票的最佳时机Ⅲ
         k = 2
         """
         max_k = 2
         n = len(prices)
         dp = [[[0, 0]] * (max_k + 1)] * n
+
         for i in range(n):
             for k in range(max_k + 1):
                 if i > 0:
-                    dp[i][k][0] = max()
-                else:   # base case
+                    dp[i][k][0] = max(dp[i - 1][k][0], dp[i - 1][k][1] + prices[i])
+                    dp[i][k][1] = max(dp[i - 1][k - 1][1], dp[i - 1][k - 1][0] - prices[i])
+
+                else:  # base case
                     dp[0][k][0] = 0
+                    dp[0][k][1] = -prices[0]
+        # return max(dp[-1][-1][0]
+
+        # 骚气强行转移状态法
+        n = len(prices)
+        dp0 = 0
+        dp1 = -prices[0]
+        dp2 = float("-inf")
+        dp3 = float("-inf")
+        dp4 = float("-inf")
+        for i in range(n):
+            dp1 = max(dp1, - prices[i])
+            dp2 = max(dp2, dp1 + prices[i])
+            dp3 = max(dp3, dp2 - prices[i])
+            dp4 = max(dp4, dp3 + prices[i])
+        return max(dp0, dp2, dp4)
+
+    def maxProfit4(self, prices: List[int]) -> int:
+        """
+        188. 买卖股票的最佳时机 IV
+        限制为 k 笔交易
+        """
+        pass
+
+    def maxProfit5(self, prices: List[int]) -> int:
+        """
+        含冻结期
+        """
+        n = len(prices)
+        dp_i_0 = 0
+        dp_i_1 = float("-inf")
+        dp_pre_0 = 0
+        for i in range(n):
+            tmp = dp_i_0
+            dp_i_0 = max(dp_i_0, dp_i_0 + prices[i])
+            dp_i_1 = max(dp_i_1, dp_pre_0 - prices[i])
+            dp_pre_0 = tmp
+        return dp_i_0
+
+
+class HouseRobber:
+    """
+    三道打家劫舍问题
+    """
+
+    def rob1(self, nums: List[int]) -> int:
+        """
+        198. 打家劫舍
+        你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，
+        影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，
+        如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+        给定一个代表每个房屋存放金额的非负整数数组，
+        计算你 不触动警报装置的情况下 ，一夜之内能够偷窃到的最高金额。
+        :param nums:[1,2,3,1]
+        :return:4
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+        """
+        # 初级动规
+        if not nums:
+            return 0
+
+        n = len(nums)
+        if n <= 2:
+            return max(nums)
+        dp = [0] * n
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+        for i in range(2, n):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+        # return max(dp[-1], dp[-2])
+        """
+        N = len(nums)
+        dp = [0] * (N + 1)
+        dp[0] = 0
+        dp[1] = nums[0]
+        for j in range(2, N + 1):
+            dp[j] = max(dp[j - 1], dp[j - 2] + nums[i]
+        return dp[-1]
+        
+        先不要想着去优化结构，把基本的结构弄出来再说。
+        """
+
+        # 优化空间复杂度，滚动数组
+        if not nums:
+            return 0
+        n = len(nums)
+        if n <= 2:
+            return max(nums)
+        left = nums[0]
+        right = max(nums[0], nums[1])
+        for num in nums[2:]:
+            left, right = right, max(left + num, right)
+        return right
+
+
+    def rob2(self, nums: List[int]) -> int:
+        """
+        213. 打家劫舍 II
+        你是一个专业的小偷，计划偷窃沿街的房屋，每间房内都藏有一定的现金。
+        这个地方所有的房屋都 围成一圈 ，这意味着第一个房屋和最后一个房屋是紧挨着的。
+        同时，相邻的房屋装有相互连通的防盗系统，
+        如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警 。
+        给定一个代表每个房屋存放金额的非负整数数组，
+        计算你 在不触动警报装置的情况下 ，能够偷窃到的最高金额。
+        :param nums:[1,2,3,1]
+        :return:4
+        最后一个和第一个不能同时偷
+        """
+
+
+    def rob3(self, root: TreeNode) -> int:
+        """
+        337. 打家劫舍 III
+        在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。
+        这个地区只有一个入口，我们称之为“根”。 除了“根”之外，
+        每栋房子有且只有一个“父“房子与之相连。一番侦察之后，
+        聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。
+        如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+
+        计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+        """
+
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
