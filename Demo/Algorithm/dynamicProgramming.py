@@ -209,7 +209,6 @@ class HouseRobber:
             left, right = right, max(left + num, right)
         return right
 
-
     def rob2(self, nums: List[int]) -> int:
         """
         213. 打家劫舍 II
@@ -242,8 +241,6 @@ class HouseRobber:
             dp2[i] = max(dp2[i - 1], dp2[i - 2] + nums[i])
         return amx(dp1[-1], dp2[-2])
 
-
-
     def rob3(self, root: TreeNode) -> int:
         """
         337. 打家劫舍 III
@@ -256,24 +253,18 @@ class HouseRobber:
         计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
         层序遍历？
         """
-        def helper(node):
-            res = [0, 0]
+
+        def postorderTraversal(node):
             if not node:
-                return res
-            if node.left:
-                res_left = helper(node.left)
-            else:
-                res_left = [0, 0]
-            if node.right:
-                res_right = helper(node.right)
-            else:
-                res_right = [0, 0]
+                return [0, 0]
+            left = postorderTraversal(node.left)
+            right = postorderTraversal(node.right)
+            robHere = left[1] + right[1] + node.val
+            notRobHere = max(left[0], left[1]) + max(right[0], right[1])
+            return [robHere, notRobHere]
 
-            res[0] = max(res_left[0], res_left[1] + max(res_right[0], res_right[1]))
-            res[1] = node.val + res_right[0] + res_left[0]
-
-        res = helper(root)
-        return max(res)
+        res = postorderTraversal(root)
+        return max(res[0], res[1])
 
     class TreeNode:
         def __init__(self, val=0, left=None, right=None):
