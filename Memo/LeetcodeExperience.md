@@ -9,3 +9,12 @@
 单向BFS解决的问题，若终点位置明确，可以考虑用双向BFS，使用两个HashSet代替queue，两个方向遍历，随时交换，看是否有交集即可。
 
 二分查找问题不要上来直接写，先搞定普通查索引的问题，再说明这种算法的局限性，是否需要进一步求左边界、右边界。
+
+python字符串列表`strs = List[str]`小技巧：`max(strs)`, `min(strs)` 分别表示字典序最大和字典序最小的字符串。
+
+数组内nSum问题等需要排重，记得用好`for`循环配合 `continue`功能，判断指针移动值未移动后直接再次循环即可；或者直接用`while`循环移动指针到下一个不同值处。
+
+二叉树问题：两个节点都为空：`if not (left or right):`；两个节点至少一个为空：`if not (left and right):`；然后才可以通过`if left.val != right.val:`判断后续对称性等问题。
+
+二叉树的递归操作内，只要想`node.left`/`node.right`/`node.val`之前都必须先判断`if not node`否则必报错。
+
