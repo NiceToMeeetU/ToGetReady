@@ -18,3 +18,5 @@ python字符串列表`strs = List[str]`小技巧：`max(strs)`, `min(strs)` 分�
 
 二叉树的递归操作内，只要想`node.left`/`node.right`/`node.val`之前都必须先判断`if not node`否则必报错。
 
+python中的普通list数组可以使用拉链函数 `(zip(*matrix))` 进行转置。
+
