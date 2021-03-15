@@ -20,3 +20,11 @@ python字符串列表`strs = List[str]`小技巧：`max(strs)`, `min(strs)` 分�
 
 python中的普通list数组可以使用拉链函数 `(zip(*matrix))` 进行转置。
 
+判断二叉树叶子节点：1、`if not node.left and not node.right`；2、`if not  (node.left or node.right)`。
+
+python 检测字符串s是否由字母和数字组成：`s.isalnum()`，卧槽这么重要的小技巧以前居然从来没见过？
+
+众数问题、多数元素、最多出现问题莫忘了考虑使用**摩尔投票**法。
+
+涉及到偶数个元素中找出现一次的某个元素，考虑使用 `^`运算，异或可交换，任何数异或自己都为零，零异或任何数都是任何数。
+
