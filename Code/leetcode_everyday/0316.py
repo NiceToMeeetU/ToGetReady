@@ -1,9 +1,10 @@
 # coding   : utf-8 
-# @Time    : 21/03/16 8:18
+# @Time    : 21/03/16 11:13
 # @Author  : Wang Yu
 # @Project : ToGetReady
 # @File    : 0316.py
 # @Software: PyCharm
+
 
 from typing import List
 
@@ -72,15 +73,3 @@ class Solution:
             maxF = max(maxTemp * num, max(num, minTemp * num))
             res = max(maxF, res)
         return  res
-
-
-
-
-
-
-
-
-if __name__ == '__main__':
-    solution = Solution()
-    # print(solution.generateMatrix(5))
-    print(solution.maxProduct(([2,3,-2,4])))
