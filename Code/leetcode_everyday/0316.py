@@ -8,6 +8,7 @@
 
 from typing import List
 
+
 class Solution:
     def singleNumber(self, nums: List[int]) -> List[int]:
         """
@@ -17,7 +18,7 @@ class Solution:
         进阶：你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
         """
         import functools
-        tmp = functools.reduce(lambda x,y: x^ y, nums)
+        tmp = functools.reduce(lambda x, y: x ^ y, nums)
         div = 1
         while tmp & div == 0:
             div <<= 1
@@ -36,11 +37,11 @@ class Solution:
         且元素按顺时针顺序螺旋排列的 n x n 正方形矩阵 matrix 。
         """
         res = [[0 for _ in range(n)] for _ in range(n)]
-        i,j = 0, 0
+        i, j = 0, 0
         left, right, up, down = 0, 0, 0, 0
         k = 1
-        while k <= n**2:
-            for j in range(left, n-right):
+        while k <= n ** 2:
+            for j in range(left, n - right):
                 res[i][j] = k
                 k += 1
             up += 1
@@ -48,7 +49,7 @@ class Solution:
                 res[i][j] = k
                 k += 1
             right += 1
-            for j in range(n - right -1, left - 1, -1):
+            for j in range(n - right - 1, left - 1, -1):
                 res[i][j] = k
                 k += 1
             down += 1
@@ -58,8 +59,7 @@ class Solution:
             left += 1
         return res
 
-
-    def maxProduct(self, nums:List[int]) -> int:
+    def maxProduct(self, nums: List[int]) -> int:
         """
         152. 乘积最大子数组
         """
@@ -72,4 +72,39 @@ class Solution:
             minF = min(minTemp * num, min(num, maxTemp * num))
             maxF = max(maxTemp * num, max(num, minTemp * num))
             res = max(maxF, res)
-        return  res
+        return res
+
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        """
+        426. 将二叉搜索树转化为排序的双向链表
+        """
+        # 迭代中序遍历
+        if not root:
+            return
+        head = Node(-1, None, None)
+        prev = head
+        stack = []
+        node = root
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            node = stack.pop()
+            prev.right = node
+            node.left = prev
+            prev = node
+            node = node.right
+        head.right.left = prev
+        prev.right = head.right
+        # return head.right
+
+        # 递归中序遍历
+        if not root:
+            return
+        head = Node(-1, None, None)
+        prev = head
+        def dfs(node_):
+            nonlocal prev
+            if not node_:
+                return
+            dfs(node_.le)
