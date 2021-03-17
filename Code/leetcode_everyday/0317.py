@@ -35,7 +35,6 @@ class Solution:
                     dp[i][j] = dp[i - 1][j]
         return dp[m][n]
 
-
     def longestPalindrome(self, s: str) -> str:
         """
         5. 最长回文子串
@@ -172,7 +171,6 @@ class Solution:
             root = root.right
         root.right = tmp
 
-
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         """
         4. 寻找两个正序数组的中位数
@@ -181,6 +179,70 @@ class Solution:
         :return:
         """
         m, n = len(nums1), len(nums2)
+
+    def findTargetSumWays(self, nums: List[int], S: int) -> int:
+        """
+        494. 目标和
+        :param nums:
+        :param S:
+        :return:
+        巧妙转换成背包问题
+        dp[i][j] = dp[i - 1][j] + dp[i - 1][j - nums[i - 1]]
+        base case: dp[i][0] = 1, dp[0][j] = 0
+        """
+
+        # 回溯算法暴力穷举一遍
+
+        def backtrack(nums_, i, rest):
+            nonlocal res
+            if len(nums_) == i:
+                if rest == 0:
+                    res += 1
+                    return
+            rest += nums_[i]
+            backtrack(nums_, i + 1, rest)
+            rest -= nums_[i]
+            rest -= nums_[i]
+            backtrack(nums_, i + 1, rest)
+            rest += nums_[i]
+
+        res = 0
+        if not nums: return res
+        backtrack(nums, 0, S)
+        # return res
+
+        def subSum(nums_, target):
+            dp = [0] * (target + 1)
+            dp[0] = 1
+            for num in nums:
+                for i in range(target, num - 1, -1):
+                    dp[i] += dp[i - num]
+            return dp[target]
+        sums = sum(nums) + S
+        if sums % 2 != 0:
+            return 0
+        else:
+            return subSum(nums, sums // 2)
+
+
+
+    def knapsack(self, W: int, wt: List[int], val: List[int]) -> int:
+        """
+        背包问题初步
+        :param W: 背包总容量
+        :param wt: 待装物品重量明细
+        :param val:  待装物品价值明细
+        :return: 最大携带的价值
+        """
+        N = len(wt)
+        dp = [[0 for _ in range(W + 1)] for _ in range(N + 1)]
+        for i in range(1, N):
+            for j in range(1, W):
+                if w - wt[i - 1] < 0:
+                    dp[i][j] = dp[i - 1][j]
+                else:
+                    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - wt[i - 1]] + val[i - 1])
+        return dp[N][W]
 
 
 if __name__ == '__main__':

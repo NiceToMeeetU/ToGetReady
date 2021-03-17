@@ -271,3 +271,22 @@ class HouseRobber:
             self.val = val
             self.left = left
             self.right = right
+
+
+class SubSum:
+    """
+    子数组求和类问题
+    """
+    def subSum(self, nums: List[int], s: int) -> int:
+        """
+        求和为目标值的子数组的数量，动规基本操作
+        :param nums:
+        :param s:
+        :return:
+        """
+        dp = [0] * (s + 1)
+        dp[0] = 1
+        for num in nums:
+            for i in range(s, num - 1, -1):
+                dp[i] += dp[i - num]
+        return dp[s]
