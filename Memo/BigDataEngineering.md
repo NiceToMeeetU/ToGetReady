@@ -1,4 +1,4 @@
-# rBigDataEngineering
+# BigDataEngineering
 
 [TOC]
 
@@ -146,7 +146,7 @@ Hadoop上大量HDFS元数据信息存储在NameNode内存中,因此过多的小�
 
 
 
-## 1.10	 请说下MR中Map Task的工作机制
+### 1.10	 请说下MR中Map Task的工作机制
 
 **简单概述**：
 inputFile通过split被切割为多个split文件，通过Record按行读取内容给map（自己写的处理逻辑的方法）
@@ -303,7 +303,15 @@ Hadoop/MapReduce和Spark最适合的都是做离线型的数据分析，但Hadoo
 
 但是spark也有劣势，由于spark基于内存进行计算，虽然开发容易，但是真正面对大数据的时候，在没有进行调优的情况下，可能会出现各种各样的问题，比如OOM内存溢出等情况，导致spark程序可能无法运行起来，而mapreduce虽然运行缓慢，但是至少可以慢慢运行完。
 
-### 5. RDD持久化原理？
+### 简单讲一下RDD？
+
+ RDD弹性分布式数据集，是Spark底层的分布式数据结构，可以说是Spark的核心，其所有操作都是基于RDD的，后来的本来在RDD之上新增了类SQL结构DataFrame，DataaSet等。
+
+RDD是集群节点上的不可变的、已分区的集合对象，通过并行转换的方式来创建，可序列换，静态类型只读。
+
+包含有两种操作函数：`Transformation` 和 `Action`，区别是返回值是否RDD，如果还是RDD不会马上提交运行，只有等到出现`Action`后才会形成DAG 图，提交运行。
+
+### RDD持久化原理？
 
 spark非常重要的一个功能特性就是可以将RDD持久化在内存中。
 
@@ -793,11 +801,11 @@ Compact 的作用：
 
 [Flink可靠性的基石-checkpoint机制详细解析](https://mp.weixin.qq.com/s?__biz=Mzg2MzU2MDYzOA==&mid=2247483947&idx=1&sn=adae434f4e32b31be51627888e7d9f76&chksm=ce77f4faf9007decd2f78a788a89e6777bb7bec79f4e59093474532ca5cf774284e2fe35e1bd&token=1679639512&lang=zh_CN#rd)
 
-### 2. Flink checkpoint与 Spark Flink 有什么区别或优势吗
+### 2. Flink checkpoint与 Spark Steaming有什么区别或优势吗
 
 spark streaming 的 checkpoint 仅仅是针对 driver 的故障恢复做了数据和元数据的 checkpoint。而 flink 的 checkpoint 机制 要复杂了很多，它采用的是轻量级的分布式快照，实现了每个算子的快照，及流动中的数据的快照。
 
-### 3… Flink 中的 Time 有哪几种
+### 3 Flink 中的 Time 有哪几种
 
 在flink中被划分为事件时间，提取时间，处理时间三种。
 
@@ -1025,3 +1033,22 @@ Lambda架构，批处理流处理两套类似的逻辑。
 
 Redis本身支持MQ功能，完全可以当作一个轻量级的队列服务来使用，入队时数据比较小时性能较好一些。
 
+## 其他开发相关
+
+### 进程线程协程？
+
+- ==进程==
+
+  并发执行的程序在执行过程中分配和管理资源的基本单位，是描述计算机系统资源竞争基本单位的动态概念；
+
+- ==线程==
+
+  是进程的一个执行单元，进程内调度的实体，是比进程更小的独立运行的基本单位；
+
+- ==协程==
+
+  比线程更轻量级的存在，
+
+进程是火车，线程是火车车厢
+
+线程（thread）是操作系统能够进行运算调度的最小单位，它被包含在进程之中，是进程中的实际运作单位。
