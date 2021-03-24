@@ -43,3 +43,7 @@ python 检测字符串s是否由字母和数字组成：`s.isalnum()`，`s.isdig
 python的取整函数再复习：向上取整`math.ceil()`；向下取整`math.floor()`。
 
 遇到回溯问题，实在没思路了可以直接调用`itertools.permutations`模块，可以直接输出全排列结果，`permutations("abc", 3)`
+
+跑快慢指针之前一定要注意先判定`if not head nor not head.next: return head`，只有先保证不止一个节点之后才有快慢跑起来的意义。
+
+归并排序更适用于链表的排序，top-down的方法需要递归，空间复杂度`O(logn)`；`bottom-up`的方法可以实现`O(1)`空间复杂度。
