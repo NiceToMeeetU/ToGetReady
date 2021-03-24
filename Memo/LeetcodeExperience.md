@@ -1,4 +1,4 @@
-小本本
+# 小本本
 
 完全二叉树一定有一个子树是满二叉树
 
@@ -41,3 +41,5 @@ python 检测字符串s是否由字母和数字组成：`s.isalnum()`，`s.isdig
 整除取整问题：向下取整直接`m // n`；若想向上取整，巧妙方法`(m + n - 1) // n`。太特么骚了！
 
 python的取整函数再复习：向上取整`math.ceil()`；向下取整`math.floor()`。
+
+遇到回溯问题，实在没思路了可以直接调用`itertools.permutations`模块，可以直接输出全排列结果，`permutations("abc", 3)`
