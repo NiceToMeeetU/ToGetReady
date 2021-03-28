@@ -2,7 +2,7 @@
 # @Time    : 21/03/10 10:54
 # @Author  : Wang Yu
 # @Project : ToGetReady
-# @File    : DynamicProgramming.py
+# @File    : dynamicProgramming.py
 # @Software: PyCharm
 
 
