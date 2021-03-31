@@ -12,6 +12,8 @@
 
 ### 是否了解过指标体系的搭建？
 
+[我真设计了一套数据指标体系 (qq.com)](https://mp.weixin.qq.com/s/GpplN4iaw4majiPpzlRMSQ)
+
 搭建数据指标体系，可以考虑从三个环节入手：
 
 - 一是梳理业务管理流程框架；
