@@ -24,7 +24,7 @@ class Solution:
         stack = []
 
         for c in s:
-            if c.isnumeric():
+            if c.isnumeric(dsa ):
                 num = num * 10 + int(c)
             elif c == "[":
                 stack.append((res, num))
@@ -65,11 +65,13 @@ class Solution:
         """
         dp = [0] * (n + 1)
         dp[0], dp[1] = 1, 1
-        for i in range(2, n):
+        for i in range(2, n + 1):
             for j in range(i):
                 dp[i] += dp[j - 1] * dp[i - j]
         return dp[n]
 
+solution2 = Solution()
+solution2.decodeString("dasd ")
 
 if __name__ == '__main__':
     solution = Solution()
