@@ -5,6 +5,14 @@
 > https://blog.csdn.net/jiaoyangwm/article/details/79805939?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
 >
 
+### 辛普森悖论了解吗？
+
+### 逻辑回归和线性回归有什么区别和联系？
+
+### 为什么L1范数比L2范数更容易产生稀疏解？
+
+
+
 ## 集成学习
 
 ### boosting和bagging有何区别？
