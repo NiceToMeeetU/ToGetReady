@@ -275,6 +275,18 @@ FIFO Scheduler是最简单也是最容易理解的调度器，也不需要任何
 - TaskScheduler调度Task，根据资源情况分配到相应的Executor中；
 - 各个Executor接收Task，放入线程池里进行。
 
+
+
+1. Application 首先被Driver构建DAGger图并分解成Stage；
+2. Driver向Cluster Manager申请资源；
+3. Cluster Manager向某些Work Node发送征召信号；
+4. 被征召的Work Node启动Executor进程响应征召，并向Driver申请任务；
+5. Driver分配Task给Work Node；
+6. Executor以Stage为单位执行Task，期间Driver进行监控；
+7. Driver收到Executor任务完成的信号后向Cluster Manager发送注销信号；
+8. Cluster Manager向Work Node发送释放资源信号；
+9. Work Node对应Executor停止运行。
+
 ### 简单说下Spark支持的三种集群管理器？
 
 - `Standalone` 模式：资源管理器就是 `Master` 节点，调度策略相对单一，只支持先进先出；

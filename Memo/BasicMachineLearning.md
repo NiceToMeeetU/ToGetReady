@@ -1,13 +1,12 @@
-# 机器学习基础
+## 机器学习基础
 
 [TOC]
 
 > https://blog.csdn.net/jiaoyangwm/article/details/79805939?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
->
 
 ### 辛普森悖论了解吗？
 
-### 逻辑回归和线性回归有什么区别和联系？
+逻辑回归和线性回归有什么区别和联系？
 
 ### 为什么L1范数比L2范数更容易产生稀疏解？
 
@@ -516,7 +515,9 @@ K-fold 交叉验证就是把原始数据随机分成 K 个部分，在这 K 个�
 - logistic regression
 - linear kernel svm
 
+### 处理过数据倾斜问题吗？
 
+在大表join的时候遇到过，有一条异常imei导致整个过程异常慢，且总卡在最后一个task上挂掉，估计就是有明显的数据倾斜问题，剔除
 
 ### 熟悉哪些降维方法？
 
