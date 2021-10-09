@@ -17,7 +17,6 @@ df = pd.read_csv("dau.csv")
 df_window = df.rolling(window=3, min_periods=1, center=True).mean()
 
 df_diff = df_window.diff(7).dropna()
-df_diff
 
 data = df_window.diff(1).dropna()
 df_diff1 = df_window.diff(1).dropna()
